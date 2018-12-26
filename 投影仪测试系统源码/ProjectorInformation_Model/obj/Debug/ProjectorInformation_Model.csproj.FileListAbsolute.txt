@@ -1,0 +1,11 @@
+D:\ProjectorInformation_Main\ProjectorInformation_Model\bin\Debug\ProjectorInformation_Model.dll
+D:\ProjectorInformation_Main\ProjectorInformation_Model\bin\Debug\ProjectorInformation_Model.pdb
+D:\ProjectorInformation_Main\ProjectorInformation_Model\obj\Debug\ProjectorInformation_Model.dll
+D:\ProjectorInformation_Main\ProjectorInformation_Model\obj\Debug\ProjectorInformation_Model.pdb
+D:\ProjectorInformation_Main\ProjectorInformation_Model\obj\Debug\ProjectorInformation_Model.csprojResolveAssemblyReference.cache
+D:\项目集\电池\项目源代码\ProjectorInformation_Main\ProjectorInformation_Model\bin\Debug\ProjectorInformation_Model.dll
+D:\项目集\电池\项目源代码\ProjectorInformation_Main\ProjectorInformation_Model\bin\Debug\ProjectorInformation_Model.pdb
+D:\项目集\电池\项目源代码\ProjectorInformation_Main\ProjectorInformation_Model\obj\Debug\ProjectorInformation_Model.csprojAssemblyReference.cache
+D:\项目集\电池\项目源代码\ProjectorInformation_Main\ProjectorInformation_Model\obj\Debug\ProjectorInformation_Model.csproj.CoreCompileInputs.cache
+D:\项目集\电池\项目源代码\ProjectorInformation_Main\ProjectorInformation_Model\obj\Debug\ProjectorInformation_Model.dll
+D:\项目集\电池\项目源代码\ProjectorInformation_Main\ProjectorInformation_Model\obj\Debug\ProjectorInformation_Model.pdb
