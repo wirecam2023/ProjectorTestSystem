@@ -34,4 +34,5 @@ public:
 	CString m_OldUpEditVal;
 	virtual void OnOK();
 	virtual void OnCancel();
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };

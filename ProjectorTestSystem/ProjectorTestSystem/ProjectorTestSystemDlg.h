@@ -67,7 +67,6 @@ public:
 public:
 	CString GetTime();
 public:
-	void ReSize();
 	POINT old;
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 };

@@ -5,14 +5,14 @@
 #include "ProjectorTestSystem.h"
 #include "FixDlg.h"
 #include "afxdialogex.h"
-
+#include "ResizeCtrl.h"
 
 // CFixDlg 对话框
 
 /*全局变量*/
 int FixFirstRow = 0;
-
-
+CFixDlg *FixDlg;
+CWindowSizeMange Fix;
 IMPLEMENT_DYNAMIC(CFixDlg, CDialogEx)
 
 CFixDlg::CFixDlg(CWnd* pParent /*=NULL*/)
@@ -58,6 +58,7 @@ void CFixDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CFixDlg, CDialogEx)
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -75,6 +76,8 @@ BOOL CFixDlg::OnInitDialog()
 	m_FixList.InsertColumn(2, _T("维修后光机编码"), LVCFMT_CENTER, 150, 2);
 	m_FixList.InsertColumn(3, _T("维修后主板编码"), LVCFMT_CENTER, 150, 3);
 	m_FixList.InsertColumn(4, _T("更新时间"), LVCFMT_CENTER, 150, 4);
+	FixDlg = this;
+	Fix.Init(m_hWnd);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
@@ -340,4 +343,16 @@ void CFixDlg::OnCancel()
 	// TODO:  在此添加专用代码和/或调用基类
 
 	/*CDialogEx::OnCancel();*/
+}
+
+
+void CFixDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	// TODO:  在此处添加消息处理程序代码
+	if (nType == SIZE_RESTORED || nType == SIZE_MAXIMIZED)
+	{
+		Fix.ResizeWindow();
+	}
 }

@@ -5,14 +5,14 @@
 #include "ProjectorTestSystem.h"
 #include "AfterOldDlg.h"
 #include "afxdialogex.h"
-
+#include "ResizeCtrl.h"
 
 // CAfterOldDlg 对话框
 
 /*全局变量*/
 int AfterOldFirstRow = 0;
-
-
+CAfterOldDlg *AfterOldDlg;
+CWindowSizeMange AfterOld;
 IMPLEMENT_DYNAMIC(CAfterOldDlg, CDialogEx)
 
 CAfterOldDlg::CAfterOldDlg(CWnd* pParent /*=NULL*/)
@@ -39,6 +39,8 @@ void CAfterOldDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CAfterOldDlg, CDialogEx)
+	ON_WM_SIZE()
+	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST2, &CAfterOldDlg::OnLvnItemchangedList2)
 END_MESSAGE_MAP()
 
 
@@ -54,6 +56,8 @@ BOOL CAfterOldDlg::OnInitDialog()
 	m_AfetrOldList.InsertColumn(0, _T("机身码"), LVCFMT_CENTER, 150, 0);
 	m_AfetrOldList.InsertColumn(1, _T("第一次测试时间"), LVCFMT_CENTER, 150, 1);
 	m_AfetrOldList.InsertColumn(2, _T("第二次测试时间"), LVCFMT_CENTER, 150, 2);
+	AfterOldDlg = this;
+	AfterOld.Init(m_hWnd);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
@@ -182,4 +186,24 @@ void CAfterOldDlg::OnCancel()
 	// TODO:  在此添加专用代码和/或调用基类
 
 	//CDialogEx::OnCancel();
+}
+
+
+void CAfterOldDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	if (nType == SIZE_RESTORED || nType == SIZE_MAXIMIZED)
+	{
+		AfterOld.ResizeWindow();
+	}
+	// TODO:  在此处添加消息处理程序代码
+}
+
+
+void CAfterOldDlg::OnLvnItemchangedList2(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+	// TODO:  在此添加控件通知处理程序代码
+	*pResult = 0;
 }

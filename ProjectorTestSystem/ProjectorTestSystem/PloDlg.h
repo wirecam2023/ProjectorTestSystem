@@ -47,4 +47,5 @@ public:
 	virtual void OnCancel();
 	afx_msg void OnDestroy();
 	CEdit m_PloBodyNumSub;
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };

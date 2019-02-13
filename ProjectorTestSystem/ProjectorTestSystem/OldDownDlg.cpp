@@ -5,14 +5,15 @@
 #include "ProjectorTestSystem.h"
 #include "OldDownDlg.h"
 #include "afxdialogex.h"
-
+#include "ResizeCtrl.h"
 
 // COldDownDlg 对话框
 
 
 /*全局变量*/
 int OldDownFirstRow = 0;
-
+COldDownDlg *OldDownDlg;
+CWindowSizeMange OldDown;
 IMPLEMENT_DYNAMIC(COldDownDlg, CDialogEx)
 
 COldDownDlg::COldDownDlg(CWnd* pParent /*=NULL*/)
@@ -41,6 +42,7 @@ void COldDownDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(COldDownDlg, CDialogEx)
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -55,6 +57,8 @@ BOOL COldDownDlg::OnInitDialog()
 	m_OldDownlist.SetExtendedStyle(m_OldDownlist.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	m_OldDownlist.InsertColumn(0, _T("机身码"), LVCFMT_CENTER, 150, 0);
 	m_OldDownlist.InsertColumn(1, _T("第一次测试时间"), LVCFMT_CENTER, 150, 1);
+	OldDownDlg = this;
+	OldDown.Init(m_hWnd);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
@@ -151,4 +155,16 @@ void COldDownDlg::OnCancel()
 	// TODO:  在此添加专用代码和/或调用基类
 
 	/*CDialogEx::OnCancel();*/
+}
+
+
+void COldDownDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	// TODO:  在此处添加消息处理程序代码
+	if (nType == SIZE_RESTORED || nType == SIZE_MAXIMIZED)
+	{
+		OldDown.ResizeWindow();
+	}
 }

@@ -32,4 +32,6 @@ public:
 	CString GetTime();
 	virtual void OnOK();
 	virtual void OnCancel();
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnLvnItemchangedList2(NMHDR *pNMHDR, LRESULT *pResult);
 };

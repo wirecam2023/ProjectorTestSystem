@@ -44,6 +44,5 @@ public:
 	CButton m_DeleteSelect;
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	POINT Mainold;
-	void ReSize();
 	CString CheckNull(_variant_t Source);
 };

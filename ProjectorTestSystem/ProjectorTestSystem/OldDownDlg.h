@@ -34,4 +34,5 @@ public:
 	virtual void OnCancel();
 	CString m_OldDownEditVal;
 	CEdit m_OldDownEdit;
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };

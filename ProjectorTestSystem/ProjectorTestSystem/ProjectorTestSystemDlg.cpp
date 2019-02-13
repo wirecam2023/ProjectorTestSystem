@@ -10,6 +10,7 @@
 #include "AdoDB.h"
 #include "AdminiPassDlg.h"
 #include "SetIndexDlg.h"
+#include "ResizeCtrl.h"
 
 /*状态栏*/
 static UINT BASED_CODE indicators[] =
@@ -25,7 +26,16 @@ static UINT BASED_CODE indicators[] =
 BOOL ConnectFlag = FALSE;
 //BOOL GetOnFlag = FALSE;
 CProjectorTestSystemDlg * ProjectorTestSystemDlg;
-extern CMainDlg * MainDlg;
+extern CMainDlg *MainDlg;
+extern CPloDlg *PloDlg;
+extern CBefroeOldDlg *BrforeOldDlg;
+extern COldUpDlg *OldUpDlg;
+extern COldDownDlg *OldDownDlg;
+extern CAfterOldDlg *AfterOldDlg;
+extern CBeforeBrightDlg *BeforeBrightDlg;
+extern CFixDlg *FixDlg;
+extern CPackDlg *PackDlg;
+CWindowSizeMange PJTestSystemDlg;
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框MO
 
 class CAboutDlg : public CDialogEx
@@ -94,7 +104,6 @@ END_MESSAGE_MAP()
 BOOL CProjectorTestSystemDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-
 	// 将“关于...”菜单项添加到系统菜单中。
 
 	// IDM_ABOUTBOX 必须在系统命令范围内。
@@ -121,7 +130,10 @@ BOOL CProjectorTestSystemDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO:  在此添加额外的初始化代码
-	
+
+	/*获取控件原始位置*/
+	PJTestSystemDlg.Init(m_hWnd);
+
 	/*获取窗口大小*/
 	CRect DlgRect;
 	GetClientRect(&DlgRect);     //取客户区大小    
@@ -569,45 +581,34 @@ void CProjectorTestSystemDlg::OnSize(UINT nType, int cx, int cy)
 	// TODO:  在此处添加消息处理程序代码
 	if (nType == SIZE_RESTORED || nType == SIZE_MAXIMIZED)
 	{
-		ReSize();
-		/*CRect r;*/
-		/*GetClientRect(&r);
-		r.top += 50;
-		r.bottom -= 20;
-		MainDlg->MoveWindow(&r,TRUE);*/
+		/*状态栏*/
+		if (m_StateBar.GetSafeHwnd())
+			{
+				//RepositionBars(AFX_IDW_CONTROLBAR_FIRST, AFX_IDW_CONTROLBAR_LAST, 0);  
+				CRect    m_Rect, rectBar;
+				GetClientRect(&m_Rect);         //获取对话框的矩形区域
+				m_StateBar.GetClientRect(&rectBar);
+				m_Rect.top = m_Rect.bottom - 20;    //设置状态栏的矩形区域
+				m_StateBar.MoveWindow(0, cy - m_Rect.Height(), m_Rect.Width(), rectBar.Height());
+			}		
+		PJTestSystemDlg.ResizeWindow();
+		CRect TabCtrlRect;
+		CWnd *TabPtr;
+		TabPtr = GetDlgItem(IDC_TAB1);
+		if (TabPtr == NULL)
+		{
+			return;
+		}
+		TabPtr->GetClientRect(&TabCtrlRect);
+		TabCtrlRect.top += 25;
+		MainDlg->MoveWindow(&TabCtrlRect, TRUE);		
+		PloDlg->MoveWindow(&TabCtrlRect, TRUE);
+		BrforeOldDlg->MoveWindow(&TabCtrlRect, TRUE);
+		OldUpDlg->MoveWindow(&TabCtrlRect, TRUE);
+		OldDownDlg->MoveWindow(&TabCtrlRect, TRUE);
+		AfterOldDlg->MoveWindow(&TabCtrlRect, TRUE);
+		BeforeBrightDlg->MoveWindow(&TabCtrlRect, TRUE);
+		FixDlg->MoveWindow(&TabCtrlRect, TRUE);
+		PackDlg->MoveWindow(&TabCtrlRect, TRUE);
 	}
 }
-
-/*刷新控件*/
-void CProjectorTestSystemDlg::ReSize()
-    {  
-        float fsp[2];  
-        POINT Newp; //获取现在对话框的大小  
-        CRect recta;      
-        GetClientRect(&recta);     //取客户区大小    
-        Newp.x=recta.right-recta.left;  
-        Newp.y=recta.bottom-recta.top;  
-        fsp[0]=(float)Newp.x/old.x;  
-        fsp[1]=(float)Newp.y/old.y;  
-        CRect Rect;  
-        int woc;  
-        CPoint OldTLPoint,TLPoint; //左上角  
-        CPoint OldBRPoint,BRPoint; //右下角  
-        HWND  hwndChild=::GetWindow(m_hWnd,GW_CHILD);  //列出所有控件    
-        while(hwndChild)      
-        {      
-            woc=::GetDlgCtrlID(hwndChild);//取得ID  
-            GetDlgItem(woc)->GetWindowRect(Rect);    
-            ScreenToClient(Rect);    
-            OldTLPoint = Rect.TopLeft();    
-            TLPoint.x = long(OldTLPoint.x*fsp[0]);    
-            TLPoint.y = long(OldTLPoint.y*fsp[1]);    
-            OldBRPoint = Rect.BottomRight();    
-            BRPoint.x = long(OldBRPoint.x *fsp[0]);    
-            BRPoint.y = long(OldBRPoint.y *fsp[1]);    
-            Rect.SetRect(TLPoint,BRPoint);    
-            GetDlgItem(woc)->MoveWindow(Rect,TRUE);  
-            hwndChild=::GetWindow(hwndChild, GW_HWNDNEXT);      
-        }  
-        old=Newp;  
-    }  

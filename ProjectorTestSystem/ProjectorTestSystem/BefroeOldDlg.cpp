@@ -5,15 +5,15 @@
 #include "ProjectorTestSystem.h"
 #include "BefroeOldDlg.h"
 #include "afxdialogex.h"
-
+#include "ResizeCtrl.h"
 
 // CBefroeOldDlg 对话框
 
 
 /*全局变量*/
 int BeforeOldFirstRow = 0;
-
-
+CBefroeOldDlg *BrforeOldDlg;
+CWindowSizeMange BeforeOld;
 
 
 IMPLEMENT_DYNAMIC(CBefroeOldDlg, CDialogEx)
@@ -42,6 +42,7 @@ void CBefroeOldDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CBefroeOldDlg, CDialogEx)
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -57,6 +58,8 @@ BOOL CBefroeOldDlg::OnInitDialog()
 	m_BeforeOldList.InsertColumn(0, _T("机身码"), LVCFMT_CENTER, 150, 0);
 	m_BeforeOldList.InsertColumn(1, _T("第一次测试时间"), LVCFMT_CENTER, 150, 1);
 	m_BeforeOldList.InsertColumn(2, _T("第二次测试时间"), LVCFMT_CENTER, 150, 2);
+	BrforeOldDlg = this;
+	BeforeOld.Init(m_hWnd);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
@@ -172,4 +175,16 @@ void CBefroeOldDlg::OnCancel()
 	// TODO:  在此添加专用代码和/或调用基类
 
 	/*CDialogEx::OnCancel();*/
+}
+
+
+void CBefroeOldDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	// TODO:  在此处添加消息处理程序代码
+	if (nType == SIZE_RESTORED || nType == SIZE_MAXIMIZED)
+	{
+		BeforeOld.ResizeWindow();
+	}
 }

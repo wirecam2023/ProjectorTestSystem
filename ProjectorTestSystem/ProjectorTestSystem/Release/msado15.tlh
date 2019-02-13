@@ -1,9 +1,9 @@
-﻿// Created by Microsoft (R) C/C++ Compiler Version 12.00.40629.0 (d69527fa).
+﻿// Created by Microsoft (R) C/C++ Compiler Version 12.00.40629.0 (aa2bccd4).
 //
-// e:\工作项目\pjtestsystem_1.0.0_201901280800\projectortestsystem\projectortestsystem\release\msado15.tlh
+// d:\版本库\projectortestsystem\projectortestsystem\projectortestsystem\release\msado15.tlh
 //
 // C++ source equivalent of type library c:\program files\common files\system\ado\msado15.dll
-// compiler-generated file created 01/28/19 at 16:53:24 - DO NOT EDIT!
+// compiler-generated file created 02/13/19 at 09:14:13 - DO NOT EDIT!
 
 #pragma once
 #pragma pack(push, 8)
@@ -5022,6 +5022,6 @@ _Record_Deprecated : _ADO
 // Wrapper method implementations
 //
 
-#include "e:\工作项目\pjtestsystem_1.0.0_201901280800\projectortestsystem\projectortestsystem\release\msado15.tli"
+#include "d:\版本库\projectortestsystem\projectortestsystem\projectortestsystem\release\msado15.tli"
 
 #pragma pack(pop)

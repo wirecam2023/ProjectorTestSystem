@@ -32,4 +32,5 @@ public:
 	virtual void OnCancel();
 public:
 	CString GetTime();
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };

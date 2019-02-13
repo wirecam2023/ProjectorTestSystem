@@ -6,12 +6,14 @@
 #include "PloDlg.h"
 #include "afxdialogex.h"
 #include "ProjectorTestSystemDlg.h"
-
+#include "ResizeCtrl.h"
 
 extern CProjectorTestSystemDlg * ProjectorTestSystemDlg;
 
 /*全局变量*/
 int FirstRow = 0;
+CPloDlg *PloDlg;
+CWindowSizeMange Plo;
 // CPloDlg 对话框
 
 IMPLEMENT_DYNAMIC(CPloDlg, CDialogEx)
@@ -61,6 +63,7 @@ BEGIN_MESSAGE_MAP(CPloDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_SINGLEBODY_CHECK, &CPloDlg::OnBnClickedSinglebodyCheck)
 	ON_BN_CLICKED(IDC_MAINBOARD_CHECK, &CPloDlg::OnBnClickedMainboardCheck)
 	ON_WM_DESTROY()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -78,6 +81,8 @@ BOOL CPloDlg::OnInitDialog()
 	m_PloList.InsertColumn(2, _T("主板编码"), LVCFMT_CENTER, 150, 2);
 	m_PloList.InsertColumn(3, _T("更新时间"), LVCFMT_CENTER, 150, 3);
 	m_PloList.InsertColumn(4, _T("订单号"), LVCFMT_CENTER, 150, 4);
+	PloDlg = this;
+	Plo.Init(m_hWnd);
 	return FALSE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
@@ -389,4 +394,16 @@ void CPloDlg::OnDestroy()
 	CDialogEx::OnDestroy();
 
 	// TODO:  在此处添加消息处理程序代码
+}
+
+
+void CPloDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	// TODO:  在此处添加消息处理程序代码
+	if (nType == SIZE_RESTORED || nType == SIZE_MAXIMIZED)
+	{
+		Plo.ResizeWindow();
+	}
 }

@@ -13,10 +13,12 @@
 #include "CWorksheet.h"
 #include "CWorksheets.h"
 #include "ProjectorTestSystemDlg.h"
+#include "ResizeCtrl.h"
 /*全局变量*/
 CString ZhiDanNum, Body, SingleBody, MainNum, mWiredMac, mWiredLessMac,MainSelectSql;
 extern CProjectorTestSystemDlg * ProjectorTestSystemDlg;
 CMainDlg * MainDlg;
+CWindowSizeMange Main;
 // CMainDlg 对话框
 
 IMPLEMENT_DYNAMIC(CMainDlg, CDialogEx)
@@ -106,6 +108,7 @@ BOOL CMainDlg::OnInitDialog()
 	m_MainList.InsertColumn(21, _T("包装时间"), LVCFMT_CENTER, 60, 21);
 	m_MainList.InsertItem(0, NULL);  //为了显示水平滚动条
 	MainDlg = this;
+	Main.Init(m_hWnd);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
@@ -533,52 +536,19 @@ void CMainDlg::OnOK()
 	/*CDialogEx::OnOK();*/
 }
 
-
+/*根据比例改变控件位置和大小*/
 void CMainDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialogEx::OnSize(nType, cx, cy);
 
 	// TODO:  在此处添加消息处理程序代码
-	/*if (nType == SIZE_RESTORED || nType == SIZE_MAXIMIZED)
+	if (nType == SIZE_RESTORED || nType == SIZE_MAXIMIZED)
 	{
-		ReSize();
-	}*/
+		Main.ResizeWindow();
+	}
 }
 
-void CMainDlg::ReSize()
-{
-	//float fsp[2];
-	//POINT Newp; //获取现在对话框的大小  
-	//CRect recta;
-	//GetClientRect(&recta);     //取客户区大小    
-	//Newp.x = recta.right - recta.left;
-	//Newp.y = recta.bottom - recta.top;
-	//fsp[0] = (float)Newp.x / Mainold.x;
-	//fsp[1] = (float)Newp.y / Mainold.y;
-	//CRect Rect;
-	//int woc;
-	//CPoint OldTLPoint, TLPoint; //左上角  
-	//CPoint OldBRPoint, BRPoint; //右下角  
-	//HWND  hwndChild = ::GetWindow(m_hWnd, GW_CHILD);  //列出所有控件    
-	//while (hwndChild)
-	//{
-	//	woc = ::GetDlgCtrlID(hwndChild);//取得ID  
-	//	GetDlgItem(woc)->GetWindowRect(Rect);
-	//	ScreenToClient(Rect);
-	//	OldTLPoint = Rect.TopLeft();
-	//	TLPoint.x = long(OldTLPoint.x*fsp[0]);
-	//	TLPoint.y = long(OldTLPoint.y*fsp[1]);
-	//	OldBRPoint = Rect.BottomRight();
-	//	BRPoint.x = long(OldBRPoint.x *fsp[0]);
-	//	BRPoint.y = long(OldBRPoint.y *fsp[1]);
-	//	Rect.SetRect(TLPoint, BRPoint);
-	//	GetDlgItem(woc)->MoveWindow(Rect, TRUE);
-	//	hwndChild = ::GetWindow(hwndChild, GW_HWNDNEXT);
-	//}
-	//Mainold = Newp;
-}
-
-
+/*查数据库NULL*/
 CString CMainDlg::CheckNull(_variant_t Source)
 {
 	CString DestStr;

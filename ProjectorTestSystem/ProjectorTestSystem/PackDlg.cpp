@@ -5,15 +5,15 @@
 #include "ProjectorTestSystem.h"
 #include "PackDlg.h"
 #include "afxdialogex.h"
-
+#include "ResizeCtrl.h"
 
 // CPackDlg 对话框
 
 
 /*全局变量*/
 int PackFirstRow = 0;
-
-
+CPackDlg *PackDlg;
+CWindowSizeMange Pack;
 IMPLEMENT_DYNAMIC(CPackDlg, CDialogEx)
 
 CPackDlg::CPackDlg(CWnd* pParent /*=NULL*/)
@@ -40,6 +40,7 @@ void CPackDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CPackDlg, CDialogEx)
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -54,6 +55,8 @@ BOOL CPackDlg::OnInitDialog()
 	m_PackList.SetExtendedStyle(m_PackList.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	m_PackList.InsertColumn(0, _T("机身码"), LVCFMT_CENTER, 150, 0);
 	m_PackList.InsertColumn(1, _T("包装时间"), LVCFMT_CENTER, 150, 1);
+	PackDlg = this;
+	Pack.Init(m_hWnd);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
@@ -146,4 +149,15 @@ CString CPackDlg::GetTime()
 	CString Tiemstr;
 	Tiemstr = time.Format(_T("%Y-%m-%d  %H:%M:%S"));
 	return Tiemstr;
+}
+
+void CPackDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	// TODO:  在此处添加消息处理程序代码
+	if (nType == SIZE_RESTORED || nType == SIZE_MAXIMIZED)
+	{
+		Pack.ResizeWindow();
+	}
 }

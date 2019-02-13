@@ -13,14 +13,17 @@
 #include "CWorksheet.h"
 #include "CWorksheets.h"
 #include "ProjectorTestSystemDlg.h"
+#include "ResizeCtrl.h"
 
 
-extern CProjectorTestSystemDlg * ProjectorTestSystemDlg;
 
 
 
 /*全局变量*/
 int BrightFirstRow = 0;
+CBeforeBrightDlg *BeforeBrightDlg;
+CWindowSizeMange BeforeBright;
+extern CProjectorTestSystemDlg * ProjectorTestSystemDlg;
 // CBeforeBrightDlg 对话框
 
 IMPLEMENT_DYNAMIC(CBeforeBrightDlg, CDialogEx)
@@ -63,6 +66,7 @@ void CBeforeBrightDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CBeforeBrightDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_EXCELTOSQL, &CBeforeBrightDlg::OnBnClickedExceltosql)
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -95,7 +99,8 @@ BOOL CBeforeBrightDlg::OnInitDialog()
 	ExcelZiDuan["有线MAC"] = 4;
 	ExcelZiDuan["更新时间"] = 5;
 	ExcelZiDuan[""] = 6;
-
+	BeforeBrightDlg = this;
+	BeforeBright.Init(m_hWnd);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
@@ -435,4 +440,16 @@ void CBeforeBrightDlg::OnCancel()
 	// TODO:  在此添加专用代码和/或调用基类
 
 	//CDialogEx::OnCancel();
+}
+
+
+void CBeforeBrightDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	// TODO:  在此处添加消息处理程序代码
+	if (nType == SIZE_RESTORED || nType == SIZE_MAXIMIZED)
+	{
+		BeforeBright.ResizeWindow();
+	}
 }
