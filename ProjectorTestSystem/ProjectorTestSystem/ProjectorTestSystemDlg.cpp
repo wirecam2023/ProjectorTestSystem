@@ -96,6 +96,7 @@ BEGIN_MESSAGE_MAP(CProjectorTestSystemDlg, CDialogEx)
 	ON_COMMAND(ID_32773, &CProjectorTestSystemDlg::OnLogOut)
 	ON_COMMAND(ID_32775, &CProjectorTestSystemDlg::OnExitSystem)
 	ON_WM_SIZE()
+	ON_COMMAND(ID_RENEWPRE, &CProjectorTestSystemDlg::OnRenewpre)
 END_MESSAGE_MAP()
 
 
@@ -500,6 +501,7 @@ void CProjectorTestSystemDlg::OnAdminiGetOn()
 			GetMenu()->GetSubMenu(0)->EnableMenuItem(0, MF_BYPOSITION | MF_DISABLED);
 			GetMenu()->GetSubMenu(0)->EnableMenuItem(1, MF_BYPOSITION | MF_ENABLED);
 			GetMenu()->GetSubMenu(0)->EnableMenuItem(2, MF_BYPOSITION | MF_ENABLED);
+			GetMenu()->GetSubMenu(0)->EnableMenuItem(3, MF_BYPOSITION | MF_ENABLED);
 		}
 		else
 		{
@@ -531,7 +533,55 @@ void CProjectorTestSystemDlg::OnSetIndex()
 	//PloDlg->SetDlgItemTextA(IDC_ZHIDANNUM, DanNum);
 }
 
-/*注销登录*/
+/*菜单--刷新前缀*/
+void CProjectorTestSystemDlg::OnRenewpre()
+{
+	// TODO:  在此添加命令处理程序代码
+	CString CheckSqlIndex, BodyPre, SingleBodyPre, MainPre;
+	_variant_t BodyPreVal, SingleBodyPreVal, MainPreVal;
+	int Count;
+	CheckSqlIndex.Format(_T("SELECT * FROM ProjectorInformation_EncodingRules WHERE TypeName = '%s'"), PrefixType);
+	OperateDB.OpenRecordset(CheckSqlIndex);
+	Count = OperateDB.GetRecordCount();
+	if (Count==0)
+	{
+		m_Plo.SetDlgItemText(IDC_PLO_BODYNUM_STATIC, _T(""));
+		m_Plo.SetDlgItemText(IDC_PLO_SINGLEBODYNUM_STATIC, _T(""));
+		m_Plo.SetDlgItemText(IDC_MAINBOARDNUM_STATIC, _T(""));
+		m_BeforeOld.SetDlgItemText(IDC_BEFOREOLD_STATIC, _T(""));
+		m_OldUp.SetDlgItemText(IDC_OLDUP_STATIC, _T(""));
+		m_OldDown.SetDlgItemText(IDC_OLDDOWN_STATIC, _T(""));
+		m_AfterOld.SetDlgItemText(IDC_AFTEROLD_STATIC, _T(""));
+		m_BeforeBright.SetDlgItemText(IDC_BEFOREBRIGHT_STATIC, _T(""));
+		m_Fix.SetDlgItemText(IDC_FIX_STATIC, _T(""));
+		m_Fix.SetDlgItemText(IDC_FIX_SINGLEBODYNUM_STATIC, _T(""));
+		m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, _T(""));
+		m_Pack.SetDlgItemText(IDC_PACK_STATIC, _T(""));
+	}
+	else
+	{
+		BodyPreVal = OperateDB.m_pRecordset->GetCollect(_T("Prefix_BodyCode"));
+		SingleBodyPreVal = OperateDB.m_pRecordset->GetCollect(_T("Prefix_OpticalCode"));
+		MainPreVal = OperateDB.m_pRecordset->GetCollect(_T("Prefix_MotherboardEncoding"));
+		BodyPre = CheckNull(BodyPreVal);
+		SingleBodyPre = CheckNull(SingleBodyPreVal);
+		MainPre = CheckNull(MainPreVal);
+		m_Plo.SetDlgItemText(IDC_PLO_BODYNUM_STATIC, BodyPre);
+		m_Plo.SetDlgItemText(IDC_PLO_SINGLEBODYNUM_STATIC, SingleBodyPre);
+		m_Plo.SetDlgItemText(IDC_MAINBOARDNUM_STATIC, MainPre);
+		m_BeforeOld.SetDlgItemText(IDC_BEFOREOLD_STATIC, BodyPre);
+		m_OldUp.SetDlgItemText(IDC_OLDUP_STATIC, BodyPre);
+		m_OldDown.SetDlgItemText(IDC_OLDDOWN_STATIC, BodyPre);
+		m_AfterOld.SetDlgItemText(IDC_AFTEROLD_STATIC, BodyPre);
+		m_BeforeBright.SetDlgItemText(IDC_BEFOREBRIGHT_STATIC, BodyPre);
+		m_Fix.SetDlgItemText(IDC_FIX_STATIC, BodyPre);
+		m_Fix.SetDlgItemText(IDC_FIX_SINGLEBODYNUM_STATIC, SingleBodyPre);
+		m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, MainPre);
+		m_Pack.SetDlgItemText(IDC_PACK_STATIC, BodyPre);
+	}
+}
+
+/*菜单--注销登录*/
 void CProjectorTestSystemDlg::OnLogOut()
 {
 	// TODO:  在此添加命令处理程序代码
@@ -542,13 +592,77 @@ void CProjectorTestSystemDlg::OnLogOut()
 		GetOnFlag = FALSE;
 		ConnectFlag = FALSE;
 		m_StateBar.SetPaneText(0, _T("未登录"));
+		if (GetOnFlag == FALSE)
+		{
+			m_Tab.SetCurSel(1);
+			m_Plo.ShowWindow(SW_SHOW);
+			m_Main.ShowWindow(SW_HIDE);
+			m_BeforeOld.ShowWindow(SW_HIDE);
+			m_OldUp.ShowWindow(SW_HIDE);
+			m_OldDown.ShowWindow(SW_HIDE);
+			m_AfterOld.ShowWindow(SW_HIDE);
+			m_BeforeBright.ShowWindow(SW_HIDE);
+			m_Fix.ShowWindow(SW_HIDE);
+			m_Pack.ShowWindow(SW_HIDE);
+			m_Plo.SetDlgItemTextA(IDC_PLO_BODYNUM,_T(""));
+			m_Plo.SetDlgItemTextA(IDC_ZHIDANNUM, _T(""));
+			m_Plo.SetDlgItemTextA(IDC_PLO_SINGLEBODYNUM, _T(""));
+			m_Plo.SetDlgItemTextA(IDC_PLO_MAINBOARDNUM, _T(""));
+			m_Plo.m_SingleBodyCheck.SetCheck(FALSE);
+			m_Plo.m_MainBoardCheck.SetCheck(FALSE);
+			m_Plo.m_PloBodyNumSub.SetFocus();
+			m_Plo.m_PloSingleBodyNumEdit.EnableWindow(FALSE);
+			m_Plo.m_PloMainBoardNumEcit.EnableWindow(FALSE);
+			m_Plo.m_PloList.DeleteAllItems();
+			m_Fix.SetDlgItemTextA(IDC_FIXBODY,_T(""));
+			m_Fix.SetDlgItemTextA(IDC_FIXTEXT, _T(""));
+			m_Fix.SetDlgItemTextA(IDC_AFTERFIX_SINGLEBODY, _T(""));
+			m_Fix.SetDlgItemTextA(IDC_AFTERFIX_MAINBOARD, _T(""));
+			m_Fix.m_FixCheck1.SetCheck(FALSE);
+			m_Fix.m_FixCheck2.SetCheck(FALSE);
+			m_Fix.m_FixList.DeleteAllItems();
+			m_Main.SetDlgItemTextA(IDC_ZHIDAN,_T(""));
+			m_Main.SetDlgItemTextA(IDC_MAINNUM, _T(""));
+			m_Main.SetDlgItemTextA(IDC_BODY, _T(""));
+			m_Main.SetDlgItemTextA(IDC_WIRDMAC, _T(""));
+			m_Main.SetDlgItemTextA(IDC_SINGLEBODY, _T(""));
+			m_Main.SetDlgItemTextA(IDC_WIREDLESSMAC, _T(""));
+			m_Main.m_MainList.DeleteAllItems();
+			m_AfterOld.SetDlgItemTextA(IDC_AFTEROLDBODY,_T(""));
+			m_AfterOld.m_AfetrOldList.DeleteAllItems();
+			m_BeforeOld.SetDlgItemTextA(IDC_BEFOREOLD_BODY,_T(""));
+			m_BeforeOld.m_BeforeOldList.DeleteAllItems();
+			m_OldDown.SetDlgItemTextA(IDC_OLDDOWN,_T(""));
+			m_OldDown.m_OldDownlist.DeleteAllItems();
+			m_OldUp.SetDlgItemTextA(IDC_OLDUPEDIT,_T(""));
+			m_OldUp.m_OldUpList.DeleteAllItems();
+			m_Pack.SetDlgItemTextA(IDC_PACKEDIT,_T(""));
+			m_Pack.m_PackList.DeleteAllItems();
+			m_BeforeBright.m_BeforeBright.DeleteAllItems();
+			m_BeforeBright.m_BrightCheck1.SetCheck(FALSE);
+			m_BeforeBright.m_BrightCheck2.SetCheck(FALSE);
+			m_BeforeBright.m_BrightCheck3.SetCheck(FALSE);
+			m_Plo.SetDlgItemText(IDC_PLO_BODYNUM_STATIC, _T(""));
+			m_Plo.SetDlgItemText(IDC_PLO_SINGLEBODYNUM_STATIC, _T(""));
+			m_Plo.SetDlgItemText(IDC_MAINBOARDNUM_STATIC, _T(""));
+			m_BeforeOld.SetDlgItemText(IDC_BEFOREOLD_STATIC, _T(""));
+			m_OldUp.SetDlgItemText(IDC_OLDUP_STATIC, _T(""));
+			m_OldDown.SetDlgItemText(IDC_OLDDOWN_STATIC, _T(""));
+			m_AfterOld.SetDlgItemText(IDC_AFTEROLD_STATIC, _T(""));
+			m_BeforeBright.SetDlgItemText(IDC_BEFOREBRIGHT_STATIC, _T(""));
+			m_Fix.SetDlgItemText(IDC_FIX_STATIC, _T(""));
+			m_Fix.SetDlgItemText(IDC_FIX_SINGLEBODYNUM_STATIC, _T(""));
+			m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, _T(""));
+			m_Pack.SetDlgItemText(IDC_PACK_STATIC, _T(""));
+		}
 		GetMenu()->GetSubMenu(0)->EnableMenuItem(0, MF_BYPOSITION | MF_ENABLED);
 		GetMenu()->GetSubMenu(0)->EnableMenuItem(1, MF_BYPOSITION | MF_DISABLED);
 		GetMenu()->GetSubMenu(0)->EnableMenuItem(2, MF_BYPOSITION | MF_DISABLED);
+		GetMenu()->GetSubMenu(0)->EnableMenuItem(3, MF_BYPOSITION | MF_DISABLED);
 	}
 }
 
-/*退出系统*/
+/*菜单--退出系统*/
 void CProjectorTestSystemDlg::OnExitSystem()
 {
 	// TODO:  在此添加命令处理程序代码
@@ -573,7 +687,7 @@ CString CProjectorTestSystemDlg::GetTime()
 	return Tiemstr;
 }
 
-
+/*刷新控件*/
 void CProjectorTestSystemDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialogEx::OnSize(nType, cx, cy);
@@ -610,5 +724,21 @@ void CProjectorTestSystemDlg::OnSize(UINT nType, int cx, int cy)
 		BeforeBrightDlg->MoveWindow(&TabCtrlRect, TRUE);
 		FixDlg->MoveWindow(&TabCtrlRect, TRUE);
 		PackDlg->MoveWindow(&TabCtrlRect, TRUE);
+	}
+}
+
+/*查数据库NULL*/
+CString CProjectorTestSystemDlg::CheckNull(_variant_t Source)
+{
+	CString DestStr;
+	if (Source.vt == VT_NULL)
+	{
+		DestStr = "";
+		return DestStr;
+	}
+	else
+	{
+		DestStr = Source.bstrVal;
+		return DestStr;
 	}
 }

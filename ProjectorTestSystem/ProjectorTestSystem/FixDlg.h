@@ -45,4 +45,6 @@ public:
 	virtual void OnOK();
 	virtual void OnCancel();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	CButton m_FixCheck1;
+	CButton m_FixCheck2;
 };

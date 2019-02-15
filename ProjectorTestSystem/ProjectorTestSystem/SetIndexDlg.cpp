@@ -19,7 +19,7 @@
 
 
 /*全局变量*/
-CString m_TypeName;
+CString m_TypeName,BodyNum, SingleBodyNum, MainBoardNum;
 HTREEITEM IsSelect;
 extern CProjectorTestSystemDlg * ProjectorTestSystemDlg;
 
@@ -80,17 +80,18 @@ void CSetIndexDlg::OnBnClickedSelectindex()
 	INT_PTR InDanNumnRes;
 	CString SubPrefixType;
 	GetDlgItemText(IDC_INDEXTYPE, SubPrefixType);
-	if (SubPrefixType == _T(""))
-	{
-		MessageBox(_T("前缀类型为空，请重新选择"));
-		return;
-	}
-	else
-	{
-		
+	
+	//if (SubPrefixType == _T(""))
+	//{
+	//	MessageBox(_T("前缀类型为空，请重新选择"));
+	//	return;
+	//}
+	//else
+	//{
+	//	
 		InDanNumnRes = InDanNum.DoModal();
 		//InDanNum.m_InDanNum.SetFocus();
-	}	
+	/*}	*/
 	if (InDanNumnRes==IDCANCEL)
 	{
 		return;
@@ -152,37 +153,61 @@ void CSetIndexDlg::OnBnClickedNew()
 	m_Change.EnableWindow(FALSE);
 	m_Select.EnableWindow(FALSE);
 	m_Delete.EnableWindow(FALSE);
+	m_SetIndex.EnableWindow(FALSE);
 	m_New.EnableWindow(FALSE);
 	SetDlgItemText(IDC_TOOLINDEX,_T(""));
 	SetDlgItemText(IDC_SINGLETOOLINDEX, _T(""));
 	SetDlgItemText(IDC_INDEXTYPE, _T(""));
 	SetDlgItemText(IDC_MAININDEX,_T(""));
-	m_BodyNum.SetFocus();
+	m_IndexType.SetFocus();
 }
 
 /*保存按钮*/
 void CSetIndexDlg::OnBnClickedSave()
 {
 	// TODO:  在此添加控件通知处理程序代码
-	CString Indextype, BodyNum, SingleBodyNum, MainBoardNum, IndexName,SqlUpdate;
+	CString Indextype, SubBodyNum, SubSingleBodyNum, SubMainBoardNum, IndexName, SqlUpdate, SqlInsert,CheckSql;
 	BOOL InsertFinshFlag = FALSE;
-	
+	int IndexCount;	
 	GetDlgItemText(IDC_INDEXTYPE,Indextype);
-	GetDlgItemText(IDC_TOOLINDEX, BodyNum);
-	GetDlgItemText(IDC_SINGLETOOLINDEX, SingleBodyNum);
-	GetDlgItemText(IDC_MAININDEX, MainBoardNum);
-	if (Indextype==m_TypeName)
+	GetDlgItemText(IDC_TOOLINDEX, SubBodyNum);
+	GetDlgItemText(IDC_SINGLETOOLINDEX, SubSingleBodyNum);
+	GetDlgItemText(IDC_MAININDEX, SubMainBoardNum);
+	if (Indextype=="")
 	{
-		SqlUpdate.Format(_T("UPDATE ProjectorInformation_EncodingRules SET Prefix_BodyCode ='%s',Prefix_OpticalCode='%s',Prefix_MotherboardEncoding='%s' WHERE TypeName = '%s'"), BodyNum, SingleBodyNum, MainBoardNum, Indextype);
-		InsertFinshFlag = OperateDB.ExecuteByConnection(SqlUpdate);
+		MessageBox(_T("前缀类型名不能为空"));
+		return;
+	}
+	CheckSql.Format(_T("SELECT * FROM ProjectorInformation_EncodingRules WHERE TypeName = '%s' and Prefix_BodyCode = '%s' and Prefix_OpticalCode = '%s' and Prefix_MotherboardEncoding = '%s'"), Indextype, SubBodyNum, SubSingleBodyNum, SubMainBoardNum);
+    OperateDB.OpenRecordset(CheckSql);
+	IndexCount = OperateDB.GetRecordCount();
+	OperateDB.CloseRecordset();
+	if (IndexCount!=0)
+	{
+		MessageBox(_T("前缀已存在,无需新建"));
+		InsertFinshFlag = TRUE;
 	}
 	else
 	{
-		InsertFinshFlag = OperateDB.ExecuteByConnection(_T("insert into ProjectorInformation_EncodingRules\
-										(TypeName,Prefix_BodyCode,Prefix_OpticalCode,Prefix_MotherboardEncoding)\
-										values('" + Indextype + "'," + BodyNum + "," + SingleBodyNum + "," + MainBoardNum + ")"));
+		if (Indextype != m_TypeName)
+		{
+			SqlInsert.Format(_T("insert into ProjectorInformation_EncodingRules values('%s','%s','%s','%s')"), Indextype, SubBodyNum, SubSingleBodyNum, SubMainBoardNum);
+			InsertFinshFlag = OperateDB.ExecuteByConnection(SqlInsert);
+		}
+		else
+		{
+			SqlInsert.Format(_T("UPDATE ProjectorInformation_EncodingRules SET Prefix_BodyCode ='%s',Prefix_OpticalCode='%s',Prefix_MotherboardEncoding='%s' WHERE TypeName = '%s'"), SubBodyNum, SubSingleBodyNum, SubMainBoardNum, Indextype);
+			InsertFinshFlag = OperateDB.ExecuteByConnection(SqlInsert);
+		}
+		MessageBox(_T("保存成功！"));
 	}
-	
+	//if (Indextype == m_TypeName&&IndexCount != 0)
+	//{
+	//	SqlUpdate.Format(_T("UPDATE ProjectorInformation_EncodingRules SET Prefix_BodyCode ='%s',Prefix_OpticalCode='%s',Prefix_MotherboardEncoding='%s' WHERE TypeName = '%s'"), BodyNum, SingleBodyNum, MainBoardNum, Indextype);
+	//	InsertFinshFlag = OperateDB.ExecuteByConnection(SqlUpdate);
+	//	MessageBox(_T("保存成功！"));
+	//}
+
 	if (InsertFinshFlag==TRUE)
 	{
 		m_SetIndex.DeleteAllItems();
@@ -214,7 +239,6 @@ void CSetIndexDlg::OnBnClickedSave()
 			OperateDB.m_szErrorMsg = e.ErrorMessage();
 			return;
 		}
-		MessageBox(_T("保存成功！"));
 		OperateDB.CloseRecordset();
 		m_BodyNum.SetReadOnly(TRUE);
 		m_SingleBodyNum.SetReadOnly(TRUE);
@@ -251,6 +275,7 @@ void CSetIndexDlg::OnBnClickedAbortion()
 	m_Change.EnableWindow(TRUE);
 	m_Select.EnableWindow(TRUE);
 	m_Delete.EnableWindow(TRUE);
+	m_SetIndex.EnableWindow(TRUE);
 	m_New.EnableWindow(TRUE);	
 }
 
@@ -258,6 +283,13 @@ void CSetIndexDlg::OnBnClickedAbortion()
 void CSetIndexDlg::OnBnClickedChange()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	CString TypeNameFlag;
+	GetDlgItemText(IDC_INDEXTYPE, TypeNameFlag);
+	if (TypeNameFlag=="")
+	{
+		MessageBox(_T("当前未选中任何前缀类型，请重新选择"));
+		return;
+	}
 	m_Save.EnableWindow(TRUE);
 	m_Abortion.EnableWindow(TRUE);
 	m_Change.EnableWindow(FALSE);
@@ -267,7 +299,9 @@ void CSetIndexDlg::OnBnClickedChange()
 	m_BodyNum.SetReadOnly(FALSE);
 	m_SingleBodyNum.SetReadOnly(FALSE);
 	m_MainBoardNum.SetReadOnly(FALSE);
+	m_IndexType.SetReadOnly(FALSE);
 	m_SetIndex.EnableWindow(FALSE);
+	m_IndexType.SetFocus();
 }
 
 /*树形控件响应函数*/
@@ -275,7 +309,7 @@ void CSetIndexDlg::OnTvnSelchangedIndexbuff(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMTREEVIEW pNMTreeView = reinterpret_cast<LPNMTREEVIEW>(pNMHDR);
 	// TODO:  在此添加控件通知处理程序代码
-	CString BodyNum, SingleBodyNum, MainBoardNum,SqlStr;
+	CString SqlStr;
 	IsSelect = m_SetIndex.GetSelectedItem();
 	m_TypeName = m_SetIndex.GetItemText(IsSelect);
 	if (IsSelect==hRoot)
@@ -299,13 +333,25 @@ void CSetIndexDlg::OnTvnSelchangedIndexbuff(NMHDR *pNMHDR, LRESULT *pResult)
 void CSetIndexDlg::OnBnClickedDelete()
 {
 	// TODO:  在此添加控件通知处理程序代码
-	CString SqlDelete;
+	CString SqlDelete,TypeNameDeleteFlag;
 	BOOL DeleteFinshFlag = FALSE;
+	GetDlgItemText(IDC_INDEXTYPE, TypeNameDeleteFlag);
+	if (TypeNameDeleteFlag=="")
+	{
+		MessageBox(_T("当前未选中任何前缀类型，请重新选择"));
+		return;
+	}
 	SqlDelete.Format(_T("DELETE FROM ProjectorInformation_EncodingRules WHERE TypeName = '%s'"), m_TypeName);
 	DeleteFinshFlag = OperateDB.ExecuteByConnection(SqlDelete);	
 	if (DeleteFinshFlag==TRUE)
 	{
 		m_SetIndex.DeleteItem(IsSelect);
+		SetDlgItemText(IDC_INDEXTYPE, _T(""));
+		SetDlgItemText(IDC_TOOLINDEX, _T(""));
+		SetDlgItemText(IDC_SINGLETOOLINDEX, _T(""));
+		SetDlgItemText(IDC_MAININDEX, _T(""));
+		ProjectorTestSystemDlg->m_Plo.SetDlgItemTextA(IDC_ZHIDANNUM,_T(""));
+		DanNum = _T("");
 		MessageBox(_T("删除成功"));
 	}
 	else

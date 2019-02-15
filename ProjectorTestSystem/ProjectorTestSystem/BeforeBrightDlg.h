@@ -43,4 +43,8 @@ public:
 	virtual void OnOK();
 	virtual void OnCancel();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	CButton m_BrightCheck1;
+	CButton m_BrightCheck2;
+	CButton m_BrightCheck3;
+	CString CheckNull(_variant_t Source);
 };

@@ -152,6 +152,16 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 				}
 				try
 				{
+					m_PloBodyNumStaticValLength = m_PloBodyNumStaticVal.GetLength();
+					m_BodyNumValStr = m_BodyNumVal.Left(m_PloBodyNumStaticValLength);
+					if (m_BodyNumValStr != m_PloBodyNumStaticVal || m_BodyNumVal == "")
+					{
+						MessageBox(_T("机身码错误！"));
+						m_BodyNumVal = _T("");
+						UpdateData(FALSE);
+						m_PloBodyNumSub.SetFocus();
+						return CDialogEx::PreTranslateMessage(pMsg);
+					}
 					SelectSqlEdit1.Format(_T("SELECT * FROM ProjectorInformation_MainTable WHERE FuselageCode = '%s'"), m_BodyNumVal);
 					OperateDB.OpenRecordset(SelectSqlEdit1);
 					RecodestCount = OperateDB.GetRecordCount();
@@ -164,17 +174,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 						OperateDB.CloseRecordset();
 						return CDialogEx::PreTranslateMessage(pMsg);
 					}
-					OperateDB.CloseRecordset();
-					m_PloBodyNumStaticValLength = m_PloBodyNumStaticVal.GetLength();
-					m_BodyNumValStr = m_BodyNumVal.Left(m_PloBodyNumStaticValLength);
-					if (m_BodyNumValStr != m_PloBodyNumStaticVal || m_BodyNumVal == "")
-					{
-						MessageBox(_T("机身码错误！"));
-						m_BodyNumVal = _T("");
-						UpdateData(FALSE);
-						m_PloBodyNumSub.SetFocus();
-						return CDialogEx::PreTranslateMessage(pMsg);
-					}							
+					OperateDB.CloseRecordset();			
 				}
 				catch (_com_error &e)
 				{

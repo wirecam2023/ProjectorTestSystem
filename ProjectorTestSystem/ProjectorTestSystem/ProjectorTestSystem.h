@@ -39,3 +39,4 @@ extern CString  BodyNumPrefix;
 extern CString  SingleBodyNumPrefix;
 extern CString  MainBoardNumPrefix;
 extern BOOL GetOnFlag;
+extern CString MyTypeName, MyPrefixBodyCode, MyPrefixOpticalCode, MyPrefixMotherboardEncoding;

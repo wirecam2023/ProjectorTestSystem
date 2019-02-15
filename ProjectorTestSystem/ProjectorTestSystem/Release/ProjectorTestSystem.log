@@ -1,32 +1,8 @@
-﻿生成启动时间为 2019/2/13 11:52:53。
+﻿生成启动时间为 2019/2/15 16:59:56。
      1>项目“D:\版本库\ProjectorTestSystem\ProjectorTestSystem\ProjectorTestSystem\ProjectorTestSystem.vcxproj”在节点 2 上(Build 个目标)。
-     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (Release\) contains files shared from another project (PJTestSystem_1.0.0_201901280800.vcxproj, ProjectorTestSystem.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-     1>ClCompile:
-         E:\vs2013\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D _WINDOWS /D NDEBUG /D _MBCS /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"Release\PJTestSystem_1.0.0_201902131152.pch" /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
-         stdafx.cpp
-     1>E:\vs2013\VC\atlmfc\include\afx.h(38): warning C4996: 'MBCS_Support_Deprecated_In_MFC': MBCS support in MFC is deprecated and may be removed in a future version of MFC.
-                 E:\vs2013\VC\atlmfc\include\afx.h(33) : 参见“MBCS_Support_Deprecated_In_MFC”的声明
-         E:\vs2013\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D _WINDOWS /D NDEBUG /D _MBCS /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Release\PJTestSystem_1.0.0_201902131152.pch" /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt AdminiPassDlg.cpp AdoDB.cpp AfterOldDlg.cpp BeforeBrightDlg.cpp BefroeOldDlg.cpp FixDlg.cpp InDanNum.cpp MainDlg.cpp OldDownDlg.cpp OldUpDlg.cpp OverDraw.cpp PackDlg.cpp PloDlg.cpp ProjectorTestSystem.cpp ProjectorTestSystemDlg.cpp SetIndexDlg.cpp
-         AdminiPassDlg.cpp
-         AdoDB.cpp
-         AfterOldDlg.cpp
-         BeforeBrightDlg.cpp
-         BefroeOldDlg.cpp
-         FixDlg.cpp
-         InDanNum.cpp
-         MainDlg.cpp
-         OldDownDlg.cpp
-         OldUpDlg.cpp
-         OverDraw.cpp
-         PackDlg.cpp
-         PloDlg.cpp
-         ProjectorTestSystem.cpp
-         ProjectorTestSystemDlg.cpp
-         SetIndexDlg.cpp
-       ResourceCompile:
-         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\rc.exe /D NDEBUG /l"0x0804" /IRelease\ /nologo /fo"Release\ProjectorTestSystem.res" ProjectorTestSystem.rc 
-       Link:
-         E:\vs2013\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\版本库\ProjectorTestSystem\ProjectorTestSystem\Release\PJTestSystem_1.0.0_201902131152.exe" /INCREMENTAL:NO /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:E:\vs2013\VC\Include\Manifest\dpiaware.manifest /DEBUG /PDB:"D:\版本库\ProjectorTestSystem\ProjectorTestSystem\Release\PJTestSystem_1.0.0_201902131152.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\版本库\ProjectorTestSystem\ProjectorTestSystem\Release\PJTestSystem_1.0.0_201902131152.lib" /MACHINE:X86 /SAFESEH Release\ProjectorTestSystem.res
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (Release\) contains files shared from another project (PJTestSystem_1.0.0_201901280800.vcxproj, PJTestSystem_1.0.0_201902131152.vcxproj, PJTestSystem_1.0.0_201902151649.vcxproj, ProjectorTestSystem.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+     1>Link:
+         E:\vs2013\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\版本库\ProjectorTestSystem\ProjectorTestSystem\Release\PJTestSystem_1.0.1_201902151649.exe" /INCREMENTAL:NO /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:E:\vs2013\VC\Include\Manifest\dpiaware.manifest /DEBUG /PDB:"D:\版本库\ProjectorTestSystem\ProjectorTestSystem\Release\PJTestSystem_1.0.1_201902151649.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\版本库\ProjectorTestSystem\ProjectorTestSystem\Release\PJTestSystem_1.0.1_201902151649.lib" /MACHINE:X86 /SAFESEH Release\ProjectorTestSystem.res
          Release\AdminiPassDlg.obj
          Release\AdoDB.obj
          Release\AfterOldDlg.obj
@@ -46,9 +22,9 @@
          Release\stdafx.obj
          正在生成代码
          已完成代码的生成
-         ProjectorTestSystem.vcxproj -> D:\版本库\ProjectorTestSystem\ProjectorTestSystem\Release\PJTestSystem_1.0.0_201902131152.exe
+         ProjectorTestSystem.vcxproj -> D:\版本库\ProjectorTestSystem\ProjectorTestSystem\Release\PJTestSystem_1.0.1_201902151649.exe
      1>已完成生成项目“D:\版本库\ProjectorTestSystem\ProjectorTestSystem\ProjectorTestSystem\ProjectorTestSystem.vcxproj”(Build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:12.21
+已用时间 00:00:06.45

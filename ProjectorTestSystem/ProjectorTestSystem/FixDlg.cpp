@@ -54,6 +54,8 @@ void CFixDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_FIX_STATIC, m_FixStaticVal);
 	DDX_Text(pDX, IDC_FIX_SINGLEBODYNUM_STATIC, m_FixSingleStaticVal);
 	DDX_Text(pDX, IDC_FIX_MAINBOARDNUM_STATIC, m_FixMainStaticVal);
+	DDX_Control(pDX, IDC_CHECK2, m_FixCheck1);
+	DDX_Control(pDX, IDC_CHECK3, m_FixCheck2);
 }
 
 

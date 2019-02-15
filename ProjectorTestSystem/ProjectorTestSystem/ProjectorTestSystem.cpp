@@ -44,6 +44,7 @@ CString  PrefixType;
 CString  BodyNumPrefix;
 CString  SingleBodyNumPrefix;
 CString  MainBoardNumPrefix;
+CString MyTypeName, MyPrefixBodyCode, MyPrefixOpticalCode, MyPrefixMotherboardEncoding;
 BOOL GetOnFlag = FALSE;
 // CProjectorTestSystemApp ≥ı ºªØ
 

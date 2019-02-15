@@ -69,4 +69,6 @@ public:
 public:
 	POINT old;
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnRenewpre();
+	CString CheckNull(_variant_t Source);
 };

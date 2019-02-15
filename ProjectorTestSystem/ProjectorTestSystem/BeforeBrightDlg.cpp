@@ -61,6 +61,9 @@ void CBeforeBrightDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_WIREDMAC, m_WiredEditVal);
 	DDX_Check(pDX, IDC_CHECK3, m_WiredEditState);
 	DDX_Text(pDX, IDC_BEFOREBRIGHT_STATIC, m_BrightStaticVal);
+	DDX_Control(pDX, IDC_CHECK1, m_BrightCheck1);
+	DDX_Control(pDX, IDC_CHECK2, m_BrightCheck2);
+	DDX_Control(pDX, IDC_CHECK3, m_BrightCheck3);
 }
 
 
@@ -106,11 +109,15 @@ BOOL CBeforeBrightDlg::OnInitDialog()
 }
 
 /*Excel数据导入*/
-void CBeforeBrightDlg::OnBnClickedExceltosql()
+void CBeforeBrightDlg::OnBnClickedExceltosql() 
 {
 	// TODO:  在此添加控件通知处理程序代码
 	HRESULT hr;
+	CString str, stry, strm, strd, strh, strM, strs,BrightSelectSql,ListCtrlFalg;
+	SYSTEMTIME st;
 	CString UpdateBrightToSql,ListFirstColStr,MyTimeStr,ListFirstStr;
+	_variant_t AfterOldTestTime;
+	int DataCount;
 	hr = CoInitialize(NULL);
 	if (FAILED(hr))
 	{
@@ -166,13 +173,14 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 	long iStartRow = range.get_Row();
 	//取得已使用区域的起始列，从1开始
 	long iStartCol = range.get_Column();
+	m_BeforeBright.DeleteAllItems();
 	for (int i = iStartRow+1; i <= iRowNum; i++)
 	{
 		
 		MyTimeStr = GetTime();
 		CString strRowName = _T("");
 		CString ExcleFirstRowNameStr;
-		strRowName.Format(_T("%d"), i);
+		/*strRowName.Format(_T("%d"), i);*/
 		m_BeforeBright.InsertItem(i - 2, strRowName);
 		for (int j = iStartCol; j <= iColNum; j++)
 		{
@@ -186,46 +194,86 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 			range.AttachDispatch(range.get_Item(COleVariant((long)iStartRow),
 				COleVariant((long)j)).pdispVal);
 			ExcelFirstRowName = range.get_Value2();
+			if (ExcelFirstRowName.vt != VT_BSTR)
+			{
+				m_BeforeBright.DeleteAllItems();
+				MessageBox(_T("请输入正确的Excel表头标题"));				
+				return;
+			}
 			ExcleFirstRowNameStr = ExcelFirstRowName.bstrVal;
-			CString str, stry, strm, strd, strh, strM, strs;
-			SYSTEMTIME st;
-			if (vResult.vt == VT_BSTR)     //若是字符串
+			if (ExcleFirstRowNameStr == "机身码" || ExcleFirstRowNameStr == "照度值" || ExcleFirstRowNameStr == "无线MAC" || ExcleFirstRowNameStr == "有线MAC" || ExcleFirstRowNameStr == "更新时间")
 			{
-				str = vResult.bstrVal;
+				if (vResult.vt == VT_BSTR)     //若是字符串
+				{
+					str = vResult.bstrVal;
+				}
+				if (vResult.vt == VT_R8) //8字节的数字
+				{
+					if (ExcleFirstRowNameStr=="机身码")
+					{
+						str.Format(_T("%g"), vResult.dblVal);
+					}
+					else
+					{
+						str.Format(_T("%f"), vResult.dblVal);
+					}					
+				}
+				if (ExcleFirstRowNameStr == _T("更新时间")) //时间格式
+				{
+					COleDateTime oleTime = (COleDateTime)vResult;
+					VariantTimeToSystemTime(oleTime, &st);
+					stry.Format(_T("%d"), st.wYear);
+					strm.Format(_T("%d"), st.wMonth);
+					strd.Format(_T("%d"), st.wDay);
+					strh.Format(_T("%d"), st.wHour);
+					strM.Format(_T("%d"), st.wMinute);
+					strs.Format(_T("%d"), st.wSecond);
+					str = stry + _T("-") + strm + _T("-") + strd + _T(" ") + strh + _T(":") + strM + _T(":") + strs;
+				}
+				if (vResult.vt == VT_EMPTY) //单元为空
+				{
+					str = _T("");
+				}
+				if (vResult.vt == VT_I4)
+				{
+					str.Format(_T("%ld"), (int)vResult.lVal);
+				}
 			}
-			if (vResult.vt == VT_R8) //8字节的数字
+			else
 			{
-				str.Format(_T("%f"), vResult.dblVal);
-			}
-			if (ExcleFirstRowNameStr==_T("更新时间")) //时间格式
-			{
-				COleDateTime oleTime = (COleDateTime)vResult;
-				VariantTimeToSystemTime(oleTime, &st);
-				stry.Format(_T("%d"), st.wYear);
-				strm.Format(_T("%d"), st.wMonth);
-				strd.Format(_T("%d"), st.wDay);
-				strh.Format(_T("%d"), st.wHour);
-				strM.Format(_T("%d"), st.wMinute);
-				strs.Format(_T("%d"), st.wSecond);
-				str = stry + _T("-") + strm + _T("-") + strd + _T(" ") + strh + _T(":") + strM+_T(":")+strs;
-			}
-			if (vResult.vt == VT_EMPTY) //单元为空
-			{
-				str = _T("");
-			}
-			if (vResult.vt == VT_I4)
-			{
-				str.Format(_T("%ld"), (int)vResult.lVal);
-			}
-
+				m_BeforeBright.DeleteAllItems();
+				MessageBox(_T("请输入正确的Excel表头标题"));
+				return;
+			}			
 		   switch (ExcelZiDuan[ExcleFirstRowNameStr])
 			{
 			case 1:
-				m_BeforeBright.SetItemText(i - 2, 0, str);	
+				BrightSelectSql.Format(_T("SELECT * FROM ProjectorInformation_MainTable WHERE FuselageCode = '%s'"), str);
+				OperateDB.OpenRecordset(BrightSelectSql);
+				DataCount = OperateDB.GetRecordCount();
+				if (DataCount == 0)
+				{
+					MessageBox(_T("不存在该机身码：") + str);
+					break;
+				}
+				else
+				{
+					if (!OperateDB.m_pRecordset->BOF)
+					{
+						OperateDB.m_pRecordset->MoveFirst();
+						AfterOldTestTime = OperateDB.m_pRecordset->GetCollect(_T("PostAgingTestTime"));
+						if (AfterOldTestTime.vt == VT_NULL)
+						{
+							MessageBox(_T("机身码为：")+str + _T("的产品没有进行老化后测试"));
+							break;
+						}
+					}
+				}
+				m_BeforeBright.SetItemText(i - 2, 0, str);
 				break;
 			case 2:
 				m_BeforeBright.SetItemText(i - 2, 1, str);	
-				ListFirstColStr = m_BeforeBright.GetItemText(i - 2,0);
+				ListFirstColStr = m_BeforeBright.GetItemText(i - 2, 0);
 				UpdateBrightToSql.Format(_T("UPDATE ProjectorInformation_MainTable SET IlluminationValue = '%s',LuminanceTestQTime = '%s' WHERE FuselageCode = '%s'"), str,MyTimeStr, ListFirstColStr);
 				OperateDB.ExecuteByConnection(UpdateBrightToSql);
 				break;
@@ -236,7 +284,7 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 				OperateDB.ExecuteByConnection(UpdateBrightToSql);
 				break;
 			case 4:
-				m_BeforeBright.SetItemText(i - 2, 2, str);	
+				m_BeforeBright.SetItemText(i - 2, 2, str);
 				ListFirstColStr = m_BeforeBright.GetItemText(i - 2, 0);
 				UpdateBrightToSql.Format(_T("UPDATE ProjectorInformation_MainTable SET WiredMAC = '%s', LuminanceTestQTime = '%s' WHERE FuselageCode = '%s'"), str, MyTimeStr, ListFirstColStr);
 				OperateDB.ExecuteByConnection(UpdateBrightToSql);
@@ -251,16 +299,31 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 				break;
 			default:
 				break;
-			}			   
+			}	
+		   if (DataCount == 0 || AfterOldTestTime.vt == VT_NULL)
+		   break;
 		}
 		ListFirstStr = m_BeforeBright.GetItemText(i - 2, 0);
 		if (ListFirstStr!="")
 		{
 			m_BeforeBright.SetItemText(i - 2, 5, DanNum);
 		}
+		else
+		{
+			m_BeforeBright.DeleteItem(i - 2);
+		}
 	}
-	MessageBox(_T("导入成功"));
+	ListCtrlFalg = m_BeforeBright.GetItemText(0,0);
+	if (ListCtrlFalg == "")
+	{
+		MessageBox(_T("未导入任何数据"));
+	}
+	else
+	{
+		MessageBox(_T("导入成功"));
+	}	
 	/*释放资源*/
+	OperateDB.CloseRecordset();
 	range.ReleaseDispatch();
 	sheet.ReleaseDispatch();
 	sheets.ReleaseDispatch();
@@ -451,5 +514,21 @@ void CBeforeBrightDlg::OnSize(UINT nType, int cx, int cy)
 	if (nType == SIZE_RESTORED || nType == SIZE_MAXIMIZED)
 	{
 		BeforeBright.ResizeWindow();
+	}
+}
+
+/*查null*/
+CString CBeforeBrightDlg::CheckNull(_variant_t Source)
+{
+	CString DestStr;
+	if (Source.vt == VT_NULL)
+	{
+		DestStr = "";
+		return DestStr;
+	}
+	else
+	{
+		DestStr = Source.bstrVal;
+		return DestStr;
 	}
 }
