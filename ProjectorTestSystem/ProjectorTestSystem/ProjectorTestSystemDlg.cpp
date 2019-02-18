@@ -272,7 +272,7 @@ void CProjectorTestSystemDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult
 		else
 		{
 			m_Tab.SetCurSel(1);
-			MessageBox(_T("此操作需要管理员权限，请先登录"));
+			MessageBox(_T("此操作需要管理员权限，请先登录"), _T("提示"));
 		}
 		break;
 	case 1:
@@ -292,7 +292,7 @@ void CProjectorTestSystemDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult
 		else
 		{
 			m_Tab.SetCurSel(1);
-			MessageBox(_T("此操作需要管理员权限，请先登录"));
+			MessageBox(_T("此操作需要管理员权限，请先登录"), _T("提示"));
 		}
 		break;
 	case 2:
@@ -312,7 +312,7 @@ void CProjectorTestSystemDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult
 		else
 		{
 			m_Tab.SetCurSel(1);
-			MessageBox(_T("此操作需要管理员权限，请先登录"));
+			MessageBox(_T("此操作需要管理员权限，请先登录"), _T("提示"));
 		}
 		break;
 	case 3:
@@ -332,7 +332,7 @@ void CProjectorTestSystemDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult
 		else
 		{
 			m_Tab.SetCurSel(1);
-			MessageBox(_T("此操作需要管理员权限，请先登录"));
+			MessageBox(_T("此操作需要管理员权限，请先登录"), _T("提示"));
 		}
 		break;
 	case 4:
@@ -352,7 +352,7 @@ void CProjectorTestSystemDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult
 		else
 		{
 			m_Tab.SetCurSel(1);
-			MessageBox(_T("此操作需要管理员权限，请先登录"));
+			MessageBox(_T("此操作需要管理员权限，请先登录"), _T("提示"));
 		}
 		break;
 	case 5:
@@ -372,7 +372,7 @@ void CProjectorTestSystemDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult
 		else
 		{
 			m_Tab.SetCurSel(1);
-			MessageBox(_T("此操作需要管理员权限，请先登录"));
+			MessageBox(_T("此操作需要管理员权限，请先登录"), _T("提示"));
 		}
 		break;
 	case 6:
@@ -392,7 +392,7 @@ void CProjectorTestSystemDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult
 		else
 		{
 			m_Tab.SetCurSel(1);
-			MessageBox(_T("此操作需要管理员权限，请先登录"));
+			MessageBox(_T("此操作需要管理员权限，请先登录"), _T("提示"));
 		}
 		break;
 	case 7:
@@ -412,7 +412,7 @@ void CProjectorTestSystemDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult
 		else
 		{
 			m_Tab.SetCurSel(1);
-			MessageBox(_T("此操作需要管理员权限，请先登录"));
+			MessageBox(_T("此操作需要管理员权限，请先登录"), _T("提示"));
 		}
 		break;
 	case 8:
@@ -433,7 +433,7 @@ void CProjectorTestSystemDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult
 		else
 		{
 			m_Tab.SetCurSel(1);
-			MessageBox(_T("此操作需要管理员权限，请先登录"));
+			MessageBox(_T("此操作需要管理员权限，请先登录"), _T("提示"));
 		}
 		break;
 	default:
@@ -505,7 +505,7 @@ void CProjectorTestSystemDlg::OnAdminiGetOn()
 		}
 		else
 		{
-			MessageBox(_T("登录失败，请重新登录"));
+			MessageBox(_T("登录失败，请重新登录"), _T("提示"));
 			GetOnFlag = FALSE;
 			return;
 		}
@@ -513,7 +513,7 @@ void CProjectorTestSystemDlg::OnAdminiGetOn()
 	else
 	{
 		GetOnFlag = FALSE;
-		MessageBox(_T("密码错误！"));
+		MessageBox(_T("密码错误！"), _T("提示"));
 		return;
 	}
 	

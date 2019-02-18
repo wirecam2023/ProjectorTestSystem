@@ -117,6 +117,7 @@
     <ClInclude Include="CWorkbooks.h" />
     <ClInclude Include="CWorksheet.h" />
     <ClInclude Include="CWorksheets.h" />
+    <ClInclude Include="DeleteSelectTip.h" />
     <ClInclude Include="FixDlg.h" />
     <ClInclude Include="InDanNum.h" />
     <ClInclude Include="MainDlg.h" />
@@ -137,6 +138,7 @@
     <ClCompile Include="AfterOldDlg.cpp" />
     <ClCompile Include="BeforeBrightDlg.cpp" />
     <ClCompile Include="BefroeOldDlg.cpp" />
+    <ClCompile Include="DeleteSelectTip.cpp" />
     <ClCompile Include="FixDlg.cpp" />
     <ClCompile Include="InDanNum.cpp" />
     <ClCompile Include="MainDlg.cpp" />

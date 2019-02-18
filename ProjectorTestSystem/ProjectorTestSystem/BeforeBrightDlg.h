@@ -47,4 +47,9 @@ public:
 	CButton m_BrightCheck2;
 	CButton m_BrightCheck3;
 	CString CheckNull(_variant_t Source);
+	CRichEditCtrl m_BrightRich;
+	void DeleteNullList(CListCtrl Contrl);
+	CString  GetDate();
+	CString GetExePath();
+	BOOL WritetoTxt(CString sValue);
 };

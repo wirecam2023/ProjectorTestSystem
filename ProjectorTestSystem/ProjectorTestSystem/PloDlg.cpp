@@ -139,7 +139,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 			{
 				if (GetOnFlag == FALSE)
 				{
-					MessageBox(_T("请先登录"));
+					MessageBox(_T("请先登录"), _T("提示"));
 					m_BodyNumVal = _T("");
 					UpdateData(FALSE);
 					m_PloBodyNumSub.SetFocus();
@@ -147,7 +147,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 				}
 				if (DanNum=="")
 				{
-					MessageBox(_T("请先输入订单号"));
+					MessageBox(_T("请先输入订单号"), _T("提示"));
 					return CDialogEx::PreTranslateMessage(pMsg);
 				}
 				try
@@ -156,7 +156,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 					m_BodyNumValStr = m_BodyNumVal.Left(m_PloBodyNumStaticValLength);
 					if (m_BodyNumValStr != m_PloBodyNumStaticVal || m_BodyNumVal == "")
 					{
-						MessageBox(_T("机身码错误！"));
+						MessageBox(_T("机身码错误！"), _T("提示"));
 						m_BodyNumVal = _T("");
 						UpdateData(FALSE);
 						m_PloBodyNumSub.SetFocus();
@@ -167,7 +167,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 					RecodestCount = OperateDB.GetRecordCount();
 					if (RecodestCount != 0)
 					{
-						MessageBox(_T("机身码重复"));
+						MessageBox(_T("机身码重复"), _T("提示"));
 						m_BodyNumVal = _T("");
 						UpdateData(FALSE);
 						m_PloBodyNumSub.SetFocus();
@@ -234,7 +234,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 					m_SingleBodyNumValStr = m_SingleBodyNumVal.Left(m_PloSingleBodyNumStaticValLength);
 					if (m_SingleBodyNumValStr != m_SingleBdoyStaticVal || m_SingleBodyNumVal == "")
 					{
-						MessageBox(_T("光机码错误"));
+						MessageBox(_T("光机码错误"), _T("提示"));
 						m_SingleBodyNumVal = _T("");
 						UpdateData(FALSE);
 						m_PloSingleBodyNumEdit.SetFocus();
@@ -245,7 +245,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 					RecodestCount = OperateDB.GetRecordCount();
 					if (RecodestCount != 0)
 					{
-						MessageBox(_T("光机码重复"));
+						MessageBox(_T("光机码重复"), _T("提示"));
 						m_SingleBodyNumVal = _T("");
 						UpdateData(FALSE);
 						m_PloSingleBodyNumEdit.SetFocus();
@@ -297,7 +297,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 					m_MainBoardNumValStr = m_MainBoardNumVal.Left(m_MainBoardNumStaticValLength);
 					if (m_MainBoardNumValStr != m_PloMainBoardStaticVal || m_MainBoardNumValStr == "")
 					{
-						MessageBox(_T("主板编码错误"));
+						MessageBox(_T("主板编码错误"), _T("提示"));
 						m_MainBoardNumVal = _T("");
 						UpdateData(FALSE);
 						m_PloMainBoardNumEcit.SetFocus();
@@ -308,7 +308,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 					RecodestCount = OperateDB.GetRecordCount();
 					if (RecodestCount != 0)
 					{
-						MessageBox(_T("主板编码重复"));
+						MessageBox(_T("主板编码重复"), _T("提示"));
 						m_MainBoardNumVal = _T("");
 						UpdateData(FALSE);
 						m_PloMainBoardNumEcit.SetFocus();

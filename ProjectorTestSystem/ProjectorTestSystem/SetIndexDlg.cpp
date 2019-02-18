@@ -168,14 +168,14 @@ void CSetIndexDlg::OnBnClickedSave()
 	// TODO:  在此添加控件通知处理程序代码
 	CString Indextype, SubBodyNum, SubSingleBodyNum, SubMainBoardNum, IndexName, SqlUpdate, SqlInsert,CheckSql;
 	BOOL InsertFinshFlag = FALSE;
-	int IndexCount;	
+	int IndexCount,RecodCount;	
 	GetDlgItemText(IDC_INDEXTYPE,Indextype);
 	GetDlgItemText(IDC_TOOLINDEX, SubBodyNum);
 	GetDlgItemText(IDC_SINGLETOOLINDEX, SubSingleBodyNum);
 	GetDlgItemText(IDC_MAININDEX, SubMainBoardNum);
 	if (Indextype=="")
 	{
-		MessageBox(_T("前缀类型名不能为空"));
+		MessageBox(_T("前缀类型名不能为空"), _T("提示"));
 		return;
 	}
 	CheckSql.Format(_T("SELECT * FROM ProjectorInformation_EncodingRules WHERE TypeName = '%s' and Prefix_BodyCode = '%s' and Prefix_OpticalCode = '%s' and Prefix_MotherboardEncoding = '%s'"), Indextype, SubBodyNum, SubSingleBodyNum, SubMainBoardNum);
@@ -184,22 +184,27 @@ void CSetIndexDlg::OnBnClickedSave()
 	OperateDB.CloseRecordset();
 	if (IndexCount!=0)
 	{
-		MessageBox(_T("前缀已存在,无需新建"));
+		MessageBox(_T("前缀已存在,无需新建"), _T("提示"));
 		InsertFinshFlag = TRUE;
 	}
 	else
 	{
-		if (Indextype != m_TypeName)
+		CheckSql.Format(_T("SELECT * FROM ProjectorInformation_EncodingRules WHERE TypeName = '%s'"), Indextype);
+		OperateDB.OpenRecordset(CheckSql);
+		RecodCount = OperateDB.GetRecordCount();
+		OperateDB.CloseRecordset();
+		if (RecodCount == 0)
 		{
 			SqlInsert.Format(_T("insert into ProjectorInformation_EncodingRules values('%s','%s','%s','%s')"), Indextype, SubBodyNum, SubSingleBodyNum, SubMainBoardNum);
 			InsertFinshFlag = OperateDB.ExecuteByConnection(SqlInsert);
+			MessageBox(_T("保存成功！"), _T("提示"));
 		}
 		else
 		{
 			SqlInsert.Format(_T("UPDATE ProjectorInformation_EncodingRules SET Prefix_BodyCode ='%s',Prefix_OpticalCode='%s',Prefix_MotherboardEncoding='%s' WHERE TypeName = '%s'"), SubBodyNum, SubSingleBodyNum, SubMainBoardNum, Indextype);
 			InsertFinshFlag = OperateDB.ExecuteByConnection(SqlInsert);
-		}
-		MessageBox(_T("保存成功！"));
+			MessageBox(_T("保存成功！"), _T("提示"));
+		}		
 	}
 	//if (Indextype == m_TypeName&&IndexCount != 0)
 	//{
@@ -254,7 +259,7 @@ void CSetIndexDlg::OnBnClickedSave()
 	}
 	else
 	{
-		MessageBox(_T("保存失败，请重新修改！"));
+		MessageBox(_T("保存失败，请重新修改！"), _T("提示"));
 	}	
 }
 
@@ -287,7 +292,7 @@ void CSetIndexDlg::OnBnClickedChange()
 	GetDlgItemText(IDC_INDEXTYPE, TypeNameFlag);
 	if (TypeNameFlag=="")
 	{
-		MessageBox(_T("当前未选中任何前缀类型，请重新选择"));
+		MessageBox(_T("当前未选中任何前缀类型，请重新选择"), _T("提示"));
 		return;
 	}
 	m_Save.EnableWindow(TRUE);
@@ -338,7 +343,7 @@ void CSetIndexDlg::OnBnClickedDelete()
 	GetDlgItemText(IDC_INDEXTYPE, TypeNameDeleteFlag);
 	if (TypeNameDeleteFlag=="")
 	{
-		MessageBox(_T("当前未选中任何前缀类型，请重新选择"));
+		MessageBox(_T("当前未选中任何前缀类型，请重新选择"), _T("提示"));
 		return;
 	}
 	SqlDelete.Format(_T("DELETE FROM ProjectorInformation_EncodingRules WHERE TypeName = '%s'"), m_TypeName);
@@ -352,11 +357,11 @@ void CSetIndexDlg::OnBnClickedDelete()
 		SetDlgItemText(IDC_MAININDEX, _T(""));
 		ProjectorTestSystemDlg->m_Plo.SetDlgItemTextA(IDC_ZHIDANNUM,_T(""));
 		DanNum = _T("");
-		MessageBox(_T("删除成功"));
+		MessageBox(_T("删除成功"), _T("提示"));
 	}
 	else
 	{
-		MessageBox(_T("删除失败"));
+		MessageBox(_T("删除失败"), _T("提示"));
 	}
 }
 
@@ -368,18 +373,26 @@ void CSetIndexDlg::OnBnClickedOk()
 	GetDlgItemText(IDC_TOOLINDEX, BodyNumPrefix);
 	GetDlgItemText(IDC_SINGLETOOLINDEX, SingleBodyNumPrefix);
 	GetDlgItemText(IDC_MAININDEX, MainBoardNumPrefix);
-	ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_PLO_BODYNUM_STATIC, BodyNumPrefix);
-	ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_PLO_SINGLEBODYNUM_STATIC, SingleBodyNumPrefix);
-	ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_MAINBOARDNUM_STATIC, MainBoardNumPrefix);
-	ProjectorTestSystemDlg->m_BeforeOld.SetDlgItemText(IDC_BEFOREOLD_STATIC, BodyNumPrefix);
-	ProjectorTestSystemDlg->m_OldUp.SetDlgItemText(IDC_OLDUP_STATIC, BodyNumPrefix);
-	ProjectorTestSystemDlg->m_OldDown.SetDlgItemText(IDC_OLDDOWN_STATIC, BodyNumPrefix);
-	ProjectorTestSystemDlg->m_AfterOld.SetDlgItemText(IDC_AFTEROLD_STATIC, BodyNumPrefix);
-	ProjectorTestSystemDlg->m_BeforeBright.SetDlgItemText(IDC_BEFOREBRIGHT_STATIC, BodyNumPrefix);
-	ProjectorTestSystemDlg->m_Fix.SetDlgItemText(IDC_FIX_STATIC, BodyNumPrefix);
-	ProjectorTestSystemDlg->m_Fix.SetDlgItemText(IDC_FIX_SINGLEBODYNUM_STATIC,SingleBodyNumPrefix);
-	ProjectorTestSystemDlg->m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC,MainBoardNumPrefix);
-	ProjectorTestSystemDlg->m_Pack.SetDlgItemText(IDC_PACK_STATIC, BodyNumPrefix);
-	ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_ZHIDANNUM,DanNum);
-	CDialogEx::OnOK();
+	if (DanNum!="")
+	{
+		ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_PLO_BODYNUM_STATIC, BodyNumPrefix);
+		ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_PLO_SINGLEBODYNUM_STATIC, SingleBodyNumPrefix);
+		ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_MAINBOARDNUM_STATIC, MainBoardNumPrefix);
+		ProjectorTestSystemDlg->m_BeforeOld.SetDlgItemText(IDC_BEFOREOLD_STATIC, BodyNumPrefix);
+		ProjectorTestSystemDlg->m_OldUp.SetDlgItemText(IDC_OLDUP_STATIC, BodyNumPrefix);
+		ProjectorTestSystemDlg->m_OldDown.SetDlgItemText(IDC_OLDDOWN_STATIC, BodyNumPrefix);
+		ProjectorTestSystemDlg->m_AfterOld.SetDlgItemText(IDC_AFTEROLD_STATIC, BodyNumPrefix);
+		ProjectorTestSystemDlg->m_BeforeBright.SetDlgItemText(IDC_BEFOREBRIGHT_STATIC, BodyNumPrefix);
+		ProjectorTestSystemDlg->m_Fix.SetDlgItemText(IDC_FIX_STATIC, BodyNumPrefix);
+		ProjectorTestSystemDlg->m_Fix.SetDlgItemText(IDC_FIX_SINGLEBODYNUM_STATIC, SingleBodyNumPrefix);
+		ProjectorTestSystemDlg->m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, MainBoardNumPrefix);
+		ProjectorTestSystemDlg->m_Pack.SetDlgItemText(IDC_PACK_STATIC, BodyNumPrefix);
+		ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_ZHIDANNUM, DanNum);
+		CDialogEx::OnOK();
+	}
+	else
+	{
+		CDialogEx::OnOK();
+	}
 }
+	

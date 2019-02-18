@@ -82,7 +82,7 @@ BOOL COldDownDlg::PreTranslateMessage(MSG* pMsg)
 			m_OldDownEditStr = m_OldDownEditVal.Left(m_OldDownStaticLength);
 			if (m_OldDownEditStr != m_OldDownStaticVal || m_OldDownEditVal == "")
 			{
-				MessageBox(_T("机身码错误"));
+				MessageBox(_T("机身码错误"), _T("提示"));
 				m_OldDownEdit.SetFocus();
 				m_OldDownEditVal = "";
 				UpdateData(FALSE);
@@ -93,7 +93,7 @@ BOOL COldDownDlg::PreTranslateMessage(MSG* pMsg)
 			OldDownRecordestCount = OperateDB.GetRecordCount();
 			if (OldDownRecordestCount == 0)
 			{
-				MessageBox(_T("不存在的机身码"));
+				MessageBox(_T("不存在的机身码"), _T("提示"));
 				OperateDB.CloseRecordset();
 				m_OldDownEdit.SetFocus();
 				m_OldDownEditVal = "";
@@ -105,7 +105,7 @@ BOOL COldDownDlg::PreTranslateMessage(MSG* pMsg)
 			OldUpTime = OperateDB.m_pRecordset->GetCollect(_T("AgeingBeginTime"));
 			if (OldUpTime.vt==VT_NULL)
 			{
-				MessageBox(_T("该产品没有上架老化"));
+				MessageBox(_T("该产品没有上架老化"), _T("提示"));
 				OperateDB.CloseRecordset();
 				m_OldDownEdit.SetFocus();
 				m_OldDownEditVal = "";

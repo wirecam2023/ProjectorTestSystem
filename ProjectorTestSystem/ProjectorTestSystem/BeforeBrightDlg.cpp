@@ -64,6 +64,7 @@ void CBeforeBrightDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK1, m_BrightCheck1);
 	DDX_Control(pDX, IDC_CHECK2, m_BrightCheck2);
 	DDX_Control(pDX, IDC_CHECK3, m_BrightCheck3);
+	DDX_Control(pDX, IDC_RICHEDIT22, m_BrightRich);
 }
 
 
@@ -113,11 +114,12 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 {
 	// TODO:  在此添加控件通知处理程序代码
 	HRESULT hr;
-	CString str, stry, strm, strd, strh, strM, strs,BrightSelectSql,ListCtrlFalg;
+	CString str, stry, strm, strd, strh, strM, strs,BrightSelectSql,ListCtrlFalg,CtrlFlag;
 	SYSTEMTIME st;
 	CString UpdateBrightToSql,ListFirstColStr,MyTimeStr,ListFirstStr;
 	_variant_t AfterOldTestTime;
 	int DataCount;
+	int ListStraRow, ListCount;
 	hr = CoInitialize(NULL);
 	if (FAILED(hr))
 	{
@@ -147,7 +149,7 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 		DISP_E_PARAMNOTFOUND, VT_ERROR);
 	if (!app.CreateDispatch(_T("Excel.Application"), NULL))
 	{
-		this->MessageBox(_T("无法创建Excel应用"));
+		this->MessageBox(_T("无法创建Excel应用"),_T("提示"));
 		return;
 	}
 	books = app.get_Workbooks();
@@ -174,6 +176,8 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 	//取得已使用区域的起始列，从1开始
 	long iStartCol = range.get_Column();
 	m_BeforeBright.DeleteAllItems();
+	m_BrightRich.SetSel(0, -1);
+	m_BrightRich.Clear();
 	for (int i = iStartRow+1; i <= iRowNum; i++)
 	{
 		
@@ -197,7 +201,18 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 			if (ExcelFirstRowName.vt != VT_BSTR)
 			{
 				m_BeforeBright.DeleteAllItems();
-				MessageBox(_T("请输入正确的Excel表头标题"));				
+				m_BrightRich.SetSel(0, -1);
+				m_BrightRich.Clear();
+				MessageBox(_T("请输入正确的Excel表头标题"), _T("提示"));
+				/*释放资源*/
+				OperateDB.CloseRecordset();
+				range.ReleaseDispatch();
+				sheet.ReleaseDispatch();
+				sheets.ReleaseDispatch();
+				book.ReleaseDispatch();
+				books.ReleaseDispatch();
+				app.Quit();
+				app.ReleaseDispatch();
 				return;
 			}
 			ExcleFirstRowNameStr = ExcelFirstRowName.bstrVal;
@@ -242,7 +257,18 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 			else
 			{
 				m_BeforeBright.DeleteAllItems();
-				MessageBox(_T("请输入正确的Excel表头标题"));
+				m_BrightRich.SetSel(0, -1);
+				m_BrightRich.Clear();
+				MessageBox(_T("请输入正确的Excel表头标题"), _T("提示"));
+				/*释放资源*/
+				OperateDB.CloseRecordset();
+				range.ReleaseDispatch();
+				sheet.ReleaseDispatch();
+				sheets.ReleaseDispatch();
+				book.ReleaseDispatch();
+				books.ReleaseDispatch();
+				app.Quit();
+				app.ReleaseDispatch();
 				return;
 			}			
 		   switch (ExcelZiDuan[ExcleFirstRowNameStr])
@@ -253,7 +279,10 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 				DataCount = OperateDB.GetRecordCount();
 				if (DataCount == 0)
 				{
-					MessageBox(_T("不存在该机身码：") + str);
+					m_BrightRich.SetSel(-1,-1);
+					m_BrightRich.ReplaceSel(_T("不存在该机身码：") + str + _T("\r\n"));
+					WritetoTxt(_T("不存在该机身码：") + str + _T("\r\n"));
+					m_BeforeBright.InsertItem(i - 2, strRowName);
 					break;
 				}
 				else
@@ -264,7 +293,10 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 						AfterOldTestTime = OperateDB.m_pRecordset->GetCollect(_T("PostAgingTestTime"));
 						if (AfterOldTestTime.vt == VT_NULL)
 						{
-							MessageBox(_T("机身码为：")+str + _T("的产品没有进行老化后测试"));
+							m_BrightRich.SetSel(-1, -1);
+							m_BrightRich.ReplaceSel(_T("该产品没有进行老化后测试：") + str +_T("\r\n"));
+							WritetoTxt(_T("该产品没有进行老化后测试：") + str + _T("\r\n"));
+							m_BeforeBright.InsertItem(i - 2, strRowName);
 							break;
 						}
 					}
@@ -313,14 +345,26 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 			m_BeforeBright.DeleteItem(i - 2);
 		}
 	}
+	CString NullFlag;
+	ListCount = m_BeforeBright.GetItemCount();
+	for (ListStraRow = 0; ListStraRow <= ListCount; ListStraRow++)
+	{
+		NullFlag = m_BeforeBright.GetItemText(ListStraRow, 0);
+		if (NullFlag == "")
+		{
+			m_BeforeBright.DeleteItem(ListStraRow);
+			ListStraRow = 0;
+			ListCount--;
+		}
+	}
 	ListCtrlFalg = m_BeforeBright.GetItemText(0,0);
 	if (ListCtrlFalg == "")
 	{
-		MessageBox(_T("未导入任何数据"));
+		MessageBox(_T("未导入任何数据或者全部导入失败，请确认是否导入了错误的表格"), _T("提示"));
 	}
 	else
 	{
-		MessageBox(_T("导入成功"));
+		MessageBox(_T("导入成功"), _T("提示"));
 	}	
 	/*释放资源*/
 	OperateDB.CloseRecordset();
@@ -364,7 +408,7 @@ BOOL CBeforeBrightDlg::PreTranslateMessage(MSG* pMsg)
 				m_BrightBodyNumValStr = m_BrightBodyEditVal.Left(m_BrightBodyNumStaticValLength);
 				if (m_BrightBodyNumValStr != m_BrightStaticVal || m_BrightBodyEditVal == "")
 				{
-					MessageBox(_T("机身码错误！"));
+					MessageBox(_T("机身码错误！"), _T("提示"));
 					m_BrightBodyEditVal = _T("");
 					UpdateData(FALSE);
 					m_BrightBodyEdit.SetFocus();
@@ -375,7 +419,7 @@ BOOL CBeforeBrightDlg::PreTranslateMessage(MSG* pMsg)
 				BrightRecodestCount = OperateDB.GetRecordCount();
 				if (BrightRecodestCount == 0)
 				{
-					MessageBox(_T("不存在的机身码"));
+					MessageBox(_T("不存在的机身码"), _T("提示"));
 					m_BrightBodyEditVal = _T("");
 					UpdateData(FALSE);
 					m_BrightBodyEdit.SetFocus();
@@ -387,7 +431,7 @@ BOOL CBeforeBrightDlg::PreTranslateMessage(MSG* pMsg)
 				AfterOldTime = OperateDB.m_pRecordset->GetCollect(_T("PostAgingTestTime"));
 				if (AfterOldTime.vt==VT_NULL)
 				{
-					MessageBox(_T("该产品没有做老化后测试"));
+					MessageBox(_T("该产品没有做老化后测试"), _T("提示"));
 					m_BrightBodyEdit.SetFocus();
 					m_BrightBodyEditVal = "";
 					UpdateData(FALSE);
@@ -531,4 +575,68 @@ CString CBeforeBrightDlg::CheckNull(_variant_t Source)
 		DestStr = Source.bstrVal;
 		return DestStr;
 	}
+}
+
+/*删除List空行*/
+void CBeforeBrightDlg::DeleteNullList(CListCtrl Contrl)
+{
+	int StraRow,ListCount;
+	CString NullFlag;
+	ListCount = Contrl.GetItemCount();
+	for (StraRow = 0; StraRow < ListCount; StraRow++)
+	{
+		NullFlag = Contrl.GetItemText(StraRow,0);
+		if (NullFlag=="")
+		{
+			Contrl.DeleteItem(StraRow);
+		}
+	}
+}
+
+/*获取日期*/
+CString  CBeforeBrightDlg::GetDate()
+{
+	CTime time = CTime::GetCurrentTime();
+	CString DateStr,DayStr,MonthStr,YearStr;
+	int day, year, month;
+	day = time.GetDay();
+	month = time.GetMonth();
+	year = time.GetYear();
+	DayStr.Format(_T("%d"), day);
+	MonthStr.Format(_T("%d"), month);
+	YearStr.Format(_T("%d"),year);
+	DateStr = "-Default："+YearStr + "-" + MonthStr + "-" + DayStr;
+	return DateStr;
+}
+
+/*获取exe路径*/
+CString CBeforeBrightDlg::GetExePath()
+{
+	char sFileName[256] = { 0 };
+	CString ProjectPath = _T("");
+	GetModuleFileName(AfxGetInstanceHandle(), sFileName, 255);
+	ProjectPath.Format("%s", sFileName);
+	int pos = ProjectPath.ReverseFind('\\');
+	if (pos != -1)
+		ProjectPath = ProjectPath.Left(pos);
+	else
+		ProjectPath = _T("");
+	return ProjectPath;
+}
+
+/*写数据到txt文件*/
+BOOL CBeforeBrightDlg::WritetoTxt(CString sValue)
+{
+	CString SubPath;
+	SubPath = GetDate();
+	SubPath = DanNum  + SubPath;
+	CString sFile = GetExePath() + "\\" + SubPath + ".txt";
+	CStdioFile file;
+	if (file.Open(sFile, CFile::modeCreate | CFile::modeWrite | CFile::modeNoTruncate))
+	{
+		file.SeekToEnd(); // 移动文件指针到末尾
+		file.WriteString(sValue);
+		file.Close();
+	}
+	return FALSE;
 }

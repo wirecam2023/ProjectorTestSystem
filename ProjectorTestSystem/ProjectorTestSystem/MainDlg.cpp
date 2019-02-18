@@ -14,6 +14,8 @@
 #include "CWorksheets.h"
 #include "ProjectorTestSystemDlg.h"
 #include "ResizeCtrl.h"
+#include "DeleteSelectTip.h"
+
 /*全局变量*/
 CString ZhiDanNum, Body, SingleBody, MainNum, mWiredMac, mWiredLessMac,MainSelectSql;
 extern CProjectorTestSystemDlg * ProjectorTestSystemDlg;
@@ -137,7 +139,7 @@ void CMainDlg::OnBnClickedCheckindb()
 	GetDlgItemText(IDC_WIREDLESSMAC, mWiredLessMac);
 	if (ZhiDanNum == ""&&Body == ""&&SingleBody == ""&&MainNum == ""&&mWiredLessMac == ""&&mWiredMac == "")
 	{
-		MessageBox(_T("请输入查询条件"));
+		MessageBox(_T("请输入查询条件"), _T("提示"));
 		return;
 	}
 	if (ZhiDanNum != "")
@@ -352,7 +354,7 @@ void CMainDlg::WriteToExcelFunc()
 	CFont0   font;
 	if (!app.CreateDispatch(_T("Excel.Application")))
 	{
-		MessageBox(_T("创建失败！"));
+		MessageBox(_T("创建失败！"), _T("提示"));
 		return;
 	}
 	books = app.get_Workbooks();
@@ -418,7 +420,7 @@ void CMainDlg::WriteToExcelFunc()
 	books.ReleaseDispatch();
 	app.Quit();
 	app.ReleaseDispatch();
-	MessageBox(_T("导出成功！"));
+	MessageBox(_T("导出成功！"), _T("提示"));
 }
 
 /*获取单元头*/
@@ -437,6 +439,8 @@ void  CMainDlg::GetCellName(int nRow, int nCol, CString &strName)
 void CMainDlg::OnBnClickedDeleteselect()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	CDeleteSelectTip DeleteSelectTipDlg;
+	INT_PTR nRes;
 	BOOL DeleteItemFinshFlag = FALSE;
 	BOOL DeleteSqlFinshFlag = FALSE;
 	CString UpdateToSql, InsertTosql,CheckSql;
@@ -446,13 +450,21 @@ void CMainDlg::OnBnClickedDeleteselect()
 	POSITION pos;
 	int BeSelectCount, ErgodicOne,Index,CheckCount;
 	CString BeSelectBodyNum,DeleteSql;
+
 	BeSelectCount = m_MainList.GetSelectedCount();
 	if (BeSelectCount == 0)
 	{
-		MessageBox(_T("未选中数据"));
+		MessageBox(_T("未选中数据"), _T("提示"));
 	}
 	else
-	{
+	{   
+		nRes = DeleteSelectTipDlg.DoModal();
+		if (nRes==IDCANCEL)
+		{
+			m_MainList.SetItemState(-1, 0, LVIS_SELECTED);
+			m_MainList.SetSelectionMark(-1);
+			return;
+		}
 		pos = m_MainList.GetFirstSelectedItemPosition();
 		for (ErgodicOne = 1; ErgodicOne <= BeSelectCount; ErgodicOne++)
 		{
@@ -514,7 +526,7 @@ void CMainDlg::OnBnClickedDeleteselect()
 	}
 	if (DeleteSqlFinshFlag==TRUE)
 	{
-		MessageBox(_T("删除成功！"));
+		MessageBox(_T("删除成功！"), _T("提示"));
 	}
 }
 
@@ -524,7 +536,7 @@ void CMainDlg::OnBnClickedDeleteall()
 	// TODO:  在此添加控件通知处理程序代码
 	BOOL DeleteAllFinshFlag = FALSE;
 	BOOL DeleteAllSqlFinshFlag = FALSE;
-	int ItemCount,ErgodicAll,CheckCount;
+	int ItemCount,ErgodicAll,CheckCount,MyIDOK;
 	CString UpdateSql, InsertSql,MyCheckSql;
 	CString  SqlDeleteAll,DeleteAllBodyNum;
 	CString AFuselageCode, AOpticalCode, APolishingMachineTime, APreAgingTestTime, AAgeingBeginTime, AAgeingEndTime, APostAgingTestTime;
@@ -533,11 +545,16 @@ void CMainDlg::OnBnClickedDeleteall()
 	ItemCount = m_MainList.GetItemCount();
 	if (ItemCount == 0)
 	{
-		MessageBox(_T("当前界面没有数据，删除失败！"));
+		MessageBox(_T("当前界面没有数据，删除失败！"), _T("提示"));
 		return;
 	}
 	else
 	{
+		MyIDOK = MessageBox(_T("您确定要删除界面中的所有数据吗？"), _T("提示"), MB_OK | MB_OKCANCEL);
+		if (MyIDOK==2)
+		{
+			return;
+		}
 		for (ErgodicAll = 0; ErgodicAll< ItemCount; ErgodicAll++)
 		{
 			DeleteAllBodyNum = m_MainList.GetItemText(ErgodicAll, 1);//光机码1
@@ -595,12 +612,12 @@ void CMainDlg::OnBnClickedDeleteall()
 	}	
 	if (DeleteAllFinshFlag == TRUE&&DeleteAllSqlFinshFlag==TRUE)
 	{
-		MessageBox(_T("删除成功！"));
+		MessageBox(_T("删除成功！"), _T("提示"));
 		m_DeleteAll.EnableWindow(FALSE);
 	}
 	else
 	{
-		MessageBox(_T("删除失败！"));
+		MessageBox(_T("删除失败！"), _T("提示"));
 	}
 }
 

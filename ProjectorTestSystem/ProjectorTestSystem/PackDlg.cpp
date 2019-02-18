@@ -78,7 +78,7 @@ BOOL CPackDlg::PreTranslateMessage(MSG* pMsg)
 			m_PackEditStr = m_PackEditVal.Left(m_PackStaticLength);
 			if (m_PackEditStr != m_PackStatic || m_PackEditVal == "")
 			{
-				MessageBox(_T("机身码错误"));
+				MessageBox(_T("机身码错误"), _T("提示"));
 				m_PackEdit.SetFocus();
 				m_PackEditVal = "";
 				UpdateData(FALSE);
@@ -89,7 +89,7 @@ BOOL CPackDlg::PreTranslateMessage(MSG* pMsg)
 			PackRecordestCount = OperateDB.GetRecordCount();
 			if (PackRecordestCount == 0)
 			{
-				MessageBox(_T("不存在的机身码"));
+				MessageBox(_T("不存在的机身码"), _T("提示"));
 				OperateDB.CloseRecordset();
 				m_PackEdit.SetFocus();
 				m_PackEditVal = "";
@@ -101,7 +101,7 @@ BOOL CPackDlg::PreTranslateMessage(MSG* pMsg)
 			BrightTime = OperateDB.m_pRecordset->GetCollect(_T("LuminanceTestTime"));
 			if (BrightTime.vt==VT_NULL)
 			{
-				MessageBox(_T("该产品没有进行亮度测试"));
+				MessageBox(_T("该产品没有进行亮度测试"), _T("提示"));
 				OperateDB.CloseRecordset();
 				m_PackEdit.SetFocus();
 				m_PackEditVal = "";

@@ -96,6 +96,9 @@
     <ClInclude Include="C:\Users\Administrator\Desktop\OverDraw.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="DeleteSelectTip.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProjectorTestSystem.cpp">
@@ -147,6 +150,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="OverDraw.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DeleteSelectTip.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

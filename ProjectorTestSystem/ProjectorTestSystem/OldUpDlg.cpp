@@ -78,7 +78,7 @@ BOOL COldUpDlg::PreTranslateMessage(MSG* pMsg)
 			m_OldUpEditStr = m_OldUpEditVal.Left(m_OldUpStaticLength);
 			if (m_OldUpEditStr != m_OldUpStatic || m_OldUpEditVal=="")
 			{
-				MessageBox(_T("机身码错误"));
+				MessageBox(_T("机身码错误"), _T("提示"));
 				m_OldUpEdit.SetFocus();
 				m_OldUpEditVal = "";
 				UpdateData(FALSE);
@@ -89,7 +89,7 @@ BOOL COldUpDlg::PreTranslateMessage(MSG* pMsg)
 			OldUpRecordestCount = OperateDB.GetRecordCount();
 			if (OldUpRecordestCount == 0)
 			{
-				MessageBox(_T("不存在的机身码"));
+				MessageBox(_T("不存在的机身码"), _T("提示"));
 				OperateDB.CloseRecordset();
 				m_OldUpEdit.SetFocus();
 				m_OldUpEditVal = "";
@@ -102,7 +102,7 @@ BOOL COldUpDlg::PreTranslateMessage(MSG* pMsg)
 			FirstOldTime = OperateDB.m_pRecordset->GetCollect(_T("PreAgingTestTime"));
 			if (FirstOldTime.vt==VT_NULL)
 			{
-				MessageBox(_T("该产品未做老化前测试"));
+				MessageBox(_T("该产品未做老化前测试"), _T("提示"));
 				OperateDB.CloseRecordset();
 				m_OldUpEdit.SetFocus();
 				m_OldUpEditVal = "";

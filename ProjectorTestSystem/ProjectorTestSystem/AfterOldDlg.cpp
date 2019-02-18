@@ -81,7 +81,7 @@ BOOL CAfterOldDlg::PreTranslateMessage(MSG* pMsg)
 			AfterOldBodyEditStr = m_AfterOldBodyEdit.Left(AfterOldStaticLength);
 			if (AfterOldBodyEditStr != m_AfterOldBody || m_AfterOldBodyEdit == "")
 			{
-				MessageBox(_T("机身码错误"));
+				MessageBox(_T("机身码错误"),_T("提示"));
 				m_AfterOldEditContrl.SetFocus();
 				m_AfterOldBodyEdit = _T("");
 				UpdateData(FALSE);
@@ -94,7 +94,7 @@ BOOL CAfterOldDlg::PreTranslateMessage(MSG* pMsg)
 				AfterOldRecodCount = OperateDB.GetRecordCount();
 				if (AfterOldRecodCount == 0)
 				{
-					MessageBox(_T("不存在的机身码"));
+					MessageBox(_T("不存在的机身码"),_T("提示"));
 					m_AfterOldEditContrl.SetFocus();
 					m_AfterOldBodyEdit = "";
 					UpdateData(FALSE);
@@ -106,7 +106,7 @@ BOOL CAfterOldDlg::PreTranslateMessage(MSG* pMsg)
 				OldDownTime = OperateDB.m_pRecordset->GetCollect(_T("AgeingEndTime"));
 				if (OldDownTime.vt==VT_NULL)
 				{
-					MessageBox(_T("该产品还没有下架老化"));
+					MessageBox(_T("该产品还没有下架老化"), _T("提示"));
 					m_AfterOldEditContrl.SetFocus();
 					m_AfterOldBodyEdit = "";
 					UpdateData(FALSE);

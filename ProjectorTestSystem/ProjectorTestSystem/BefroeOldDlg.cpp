@@ -83,7 +83,7 @@ BOOL CBefroeOldDlg::PreTranslateMessage(MSG* pMsg)
 			BeforeOldBodyEditStr = m_BeforeOldBodyEdit.Left(BefordOldStaticLength);
 			if (BeforeOldBodyEditStr != m_BeforeOldBody || m_BeforeOldBodyEdit == "")
 			{
-				MessageBox(_T("机身码错误"));
+				MessageBox(_T("机身码错误"), _T("提示"));
 				m_BeforeOldEditContrl.SetFocus();
 				m_BeforeOldBodyEdit = "";
 				UpdateData(FALSE);
@@ -96,7 +96,7 @@ BOOL CBefroeOldDlg::PreTranslateMessage(MSG* pMsg)
 				BeforeOldRecodCount = OperateDB.GetRecordCount();
 				if (BeforeOldRecodCount == 0)
 				{
-					MessageBox(_T("不存在的机身码"));
+					MessageBox(_T("不存在的机身码"), _T("提示"));
 					m_BeforeOldEditContrl.SetFocus();
 					m_BeforeOldBodyEdit = "";
 					UpdateData(FALSE);

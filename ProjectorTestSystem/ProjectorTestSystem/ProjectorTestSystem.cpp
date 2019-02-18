@@ -61,7 +61,7 @@ BOOL CProjectorTestSystemApp::InitInstance()
 	InitCommonControlsEx(&InitCtrls);
 
 	CWinApp::InitInstance();
-
+	AfxInitRichEdit2();
 
 	AfxEnableControlContainer();
 

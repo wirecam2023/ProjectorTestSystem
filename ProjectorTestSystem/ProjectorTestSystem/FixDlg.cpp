@@ -116,7 +116,7 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 				FixRecodestCount = OperateDB.GetRecordCount();
 				if (FixRecodestCount == 0)
 				{
-					MessageBox(_T("不存在的机身码"));
+					MessageBox(_T("不存在的机身码"), _T("提示"));
 					OperateDB.CloseRecordset();
 					m_FixSingleNumEdit.SetFocus();
 					m_FixSingleBodyEditVal = "";
@@ -128,7 +128,7 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 				m_FixBodyNumValStr = m_FixSingleBodyEditVal.Left(m_FixBodyNumStaticValLength);
 				if (m_FixBodyNumValStr != m_FixStaticVal || m_FixSingleBodyEditVal == "")
 				{
-					MessageBox(_T("机身码错误！"));
+					MessageBox(_T("机身码错误！"), _T("提示"));
 					m_FixSingleNumEdit.SetFocus();
 					m_FixSingleBodyEditVal = "";
 					UpdateData(FALSE);
@@ -200,7 +200,7 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 				m_FixSingleBodyNumValStr = m_AfterFixSingleEditVal.Left(m_FixSingleBodyNumStaticValLength);
 				if (m_FixSingleBodyNumValStr != m_FixSingleStaticVal || m_AfterFixSingleEditVal == "")
 				{
-					MessageBox(_T("光机码错误"));
+					MessageBox(_T("光机码错误"), _T("提示"));
 					m_AfterFixSingleEditVal = _T("");
 					UpdateData(FALSE);
 					m_AfterFixSingleEdit.SetFocus();
@@ -211,7 +211,7 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 				FixRecodestCount = OperateDB.GetRecordCount();
 				if (FixRecodestCount != 0)
 				{
-					MessageBox(_T("光机码重复"));
+					MessageBox(_T("光机码重复"), _T("提示"));
 					m_AfterFixSingleEditVal = _T("");
 					UpdateData(FALSE);
 					m_AfterFixSingleEdit.SetFocus();
@@ -263,7 +263,7 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 				m_FixMainBoardNumValStr = m_AfterFixMainEditVal.Left(m_FixMainBoardNumStaticValLength);
 				if (m_FixMainBoardNumValStr != m_FixMainStaticVal || m_AfterFixMainEditVal == "")
 				{
-					MessageBox(_T("主板编码错误"));
+					MessageBox(_T("主板编码错误"), _T("提示"));
 					m_AfterFixMainEditVal = _T("");
 					UpdateData(FALSE);
 					m_AfterFixMainEdit.SetFocus();
@@ -274,7 +274,7 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 				FixRecodestCount = OperateDB.GetRecordCount();
 				if (FixRecodestCount != 0)
 				{
-					MessageBox(_T("主板编码重复"));
+					MessageBox(_T("主板编码重复"), _T("提示"));
 					m_AfterFixMainEditVal = _T("");
 					UpdateData(FALSE);
 					m_AfterFixMainEdit.SetFocus();
