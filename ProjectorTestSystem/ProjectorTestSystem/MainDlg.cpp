@@ -466,7 +466,7 @@ void CMainDlg::OnBnClickedDeleteselect()
 			return;
 		}
 		pos = m_MainList.GetFirstSelectedItemPosition();
-		for (ErgodicOne = 1; ErgodicOne <= BeSelectCount; ErgodicOne++)
+		for (ErgodicOne = m_MainList.GetItemCount() - 1; ErgodicOne >= 0; ErgodicOne--)
 		{
 			Index = m_MainList.GetNextSelectedItem(pos);			
 			BeSelectBodyNum = m_MainList.GetItemText(Index, 1);//»úÉíÂë1
@@ -520,7 +520,8 @@ void CMainDlg::OnBnClickedDeleteselect()
 			}				
 			DeleteSql.Format(_T("DELETE FROM ProjectorInformation_MainTable WHERE FuselageCode = '%s'"), BeSelectBodyNum);		
 			DeleteSqlFinshFlag = OperateDB.ExecuteByConnection(DeleteSql);
-			m_MainList.DeleteItem(Index);
+			if (m_MainList.GetItemState(ErgodicOne, LVIS_SELECTED) == LVIS_SELECTED)
+				m_MainList.DeleteItem(ErgodicOne);
 		}
 			
 	}

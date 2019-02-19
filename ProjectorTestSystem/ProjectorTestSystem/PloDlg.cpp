@@ -131,6 +131,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 	BOOL SelectFinhFlag = FALSE;
 	LONG RecodestCount = 0;
 	int m_PloBodyNumStaticValLength, m_PloSingleBodyNumStaticValLength, m_MainBoardNumStaticValLength;
+	int m_SingleBodyNumValLength, m_MainBoardNumValLength;
 	TimeStr = GetTime();
 	UpdateData(TRUE);
 	if (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_RETURN)
@@ -147,13 +148,14 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 				}
 				if (DanNum=="")
 				{
-					MessageBox(_T("请先输入订单号"), _T("提示"));
+					MessageBox(_T("请先配置前缀和订单号"), _T("提示"));
 					return CDialogEx::PreTranslateMessage(pMsg);
 				}
 				try
 				{
 					m_PloBodyNumStaticValLength = m_PloBodyNumStaticVal.GetLength();
 					m_BodyNumValStr = m_BodyNumVal.Left(m_PloBodyNumStaticValLength);
+					
 					if (m_BodyNumValStr != m_PloBodyNumStaticVal || m_BodyNumVal == "")
 					{
 						MessageBox(_T("机身码错误！"), _T("提示"));
@@ -232,7 +234,8 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 				{
 					m_PloSingleBodyNumStaticValLength = m_SingleBdoyStaticVal.GetLength();
 					m_SingleBodyNumValStr = m_SingleBodyNumVal.Left(m_PloSingleBodyNumStaticValLength);
-					if (m_SingleBodyNumValStr != m_SingleBdoyStaticVal || m_SingleBodyNumVal == "")
+					m_SingleBodyNumValLength = m_SingleBodyNumVal.GetLength();
+					if (m_SingleBodyNumValStr != m_SingleBdoyStaticVal || m_SingleBodyNumVal == "" || m_SingleBodyNumValLength>13)
 					{
 						MessageBox(_T("光机码错误"), _T("提示"));
 						m_SingleBodyNumVal = _T("");
@@ -295,7 +298,8 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 				{
 					m_MainBoardNumStaticValLength = m_PloMainBoardStaticVal.GetLength();
 					m_MainBoardNumValStr = m_MainBoardNumVal.Left(m_MainBoardNumStaticValLength);
-					if (m_MainBoardNumValStr != m_PloMainBoardStaticVal || m_MainBoardNumValStr == "")
+					m_MainBoardNumValLength = m_MainBoardNumVal.GetLength();
+					if (m_MainBoardNumValStr != m_PloMainBoardStaticVal || m_MainBoardNumValStr == "" || m_MainBoardNumValLength>16)
 					{
 						MessageBox(_T("主板编码错误"), _T("提示"));
 						m_MainBoardNumVal = _T("");

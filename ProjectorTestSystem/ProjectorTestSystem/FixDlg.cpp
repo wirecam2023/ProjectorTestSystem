@@ -103,6 +103,7 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 	BOOL SelectFinhFlag = FALSE;
 	LONG FixRecodestCount = 0;
 	int m_FixBodyNumStaticValLength, m_FixSingleBodyNumStaticValLength, m_FixMainBoardNumStaticValLength;
+	int m_FixSingleBodyNumLength, m_FixMainBoardNumLength;
 	FixTimeStr = GetTime();
 	UpdateData(TRUE);
 	if (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_RETURN)
@@ -111,6 +112,15 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 		{
 			try
 			{
+				if (DanNum == "")
+				{
+					MessageBox(_T("请先配置前缀和订单号！"), _T("提示"));
+					OperateDB.CloseRecordset();
+					m_FixSingleNumEdit.SetFocus();
+					m_FixSingleBodyEditVal = "";
+					UpdateData(FALSE);
+					return CDialogEx::PreTranslateMessage(pMsg);
+				}
 				SelectSqlEdit1.Format(_T("SELECT * FROM ProjectorInformation_MainTable WHERE FuselageCode = '%s'"), m_FixSingleBodyEditVal);
 				OperateDB.OpenRecordset(SelectSqlEdit1);
 				FixRecodestCount = OperateDB.GetRecordCount();
@@ -150,6 +160,15 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 		{
 			if (m_FixMainBoardState == FALSE&&m_FixSingleBodyState == FALSE)
 			{
+				if (DanNum == "")
+				{
+					MessageBox(_T("请先配置前缀和订单号！"), _T("提示"));
+					OperateDB.CloseRecordset();
+					m_FixSingleNumEdit.SetFocus();
+					m_FixSingleBodyEditVal = "";
+					UpdateData(FALSE);
+					return CDialogEx::PreTranslateMessage(pMsg);
+				}
 
 				try
 				{
@@ -198,7 +217,8 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 			{
 				m_FixSingleBodyNumStaticValLength = m_FixSingleStaticVal.GetLength();
 				m_FixSingleBodyNumValStr = m_AfterFixSingleEditVal.Left(m_FixSingleBodyNumStaticValLength);
-				if (m_FixSingleBodyNumValStr != m_FixSingleStaticVal || m_AfterFixSingleEditVal == "")
+				m_FixSingleBodyNumLength = m_AfterFixSingleEditVal.GetLength();
+				if (m_FixSingleBodyNumValStr != m_FixSingleStaticVal || m_AfterFixSingleEditVal == "" || m_FixSingleBodyNumLength>13)
 				{
 					MessageBox(_T("光机码错误"), _T("提示"));
 					m_AfterFixSingleEditVal = _T("");
@@ -261,7 +281,8 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 			{
 				m_FixMainBoardNumStaticValLength = m_FixMainStaticVal.GetLength();
 				m_FixMainBoardNumValStr = m_AfterFixMainEditVal.Left(m_FixMainBoardNumStaticValLength);
-				if (m_FixMainBoardNumValStr != m_FixMainStaticVal || m_AfterFixMainEditVal == "")
+				m_FixMainBoardNumLength = m_AfterFixMainEditVal.GetLength();
+				if (m_FixMainBoardNumValStr != m_FixMainStaticVal || m_AfterFixMainEditVal == "" || m_FixMainBoardNumLength>16)
 				{
 					MessageBox(_T("主板编码错误"), _T("提示"));
 					m_AfterFixMainEditVal = _T("");

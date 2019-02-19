@@ -187,6 +187,21 @@ BOOL CProjectorTestSystemDlg::OnInitDialog()
 	m_Pack.SetWindowPos(NULL, tabRect.left, tabRect.top, tabRect.Width(), tabRect.Height(), SWP_HIDEWINDOW);
 	m_Tab.SetCurSel(1);
 
+	/*初始化前缀*/
+	m_Plo.SetDlgItemText(IDC_PLO_BODYNUM_STATIC, _T("未选择"));
+	m_Plo.SetDlgItemText(IDC_PLO_SINGLEBODYNUM_STATIC, _T("未选择"));
+	m_Plo.SetDlgItemText(IDC_MAINBOARDNUM_STATIC, _T("未选择"));
+	m_BeforeOld.SetDlgItemText(IDC_BEFOREOLD_STATIC, _T("未选择"));
+	m_OldUp.SetDlgItemText(IDC_OLDUP_STATIC, _T("未选择"));
+	m_OldDown.SetDlgItemText(IDC_OLDDOWN_STATIC, _T("未选择"));
+	m_AfterOld.SetDlgItemText(IDC_AFTEROLD_STATIC, _T("未选择"));
+	m_BeforeBright.SetDlgItemText(IDC_BEFOREBRIGHT_STATIC, _T("未选择"));
+	m_Fix.SetDlgItemText(IDC_FIX_STATIC, _T("未选择"));
+	m_Fix.SetDlgItemText(IDC_FIX_SINGLEBODYNUM_STATIC, _T("未选择"));
+	m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, _T("未选择"));
+	m_Pack.SetDlgItemText(IDC_PACK_STATIC, _T("未选择"));
+	m_Plo.SetDlgItemText(IDC_ZHIDANNUM, _T("未选择"));
+
 	ProjectorTestSystemDlg = this;
 
 	return FALSE;  // 除非将焦点设置到控件，否则返回 TRUE

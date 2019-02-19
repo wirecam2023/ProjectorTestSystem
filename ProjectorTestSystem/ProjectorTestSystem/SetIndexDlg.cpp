@@ -392,6 +392,19 @@ void CSetIndexDlg::OnBnClickedOk()
 	}
 	else
 	{
+		ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_PLO_BODYNUM_STATIC, _T("Î´Ñ¡Ôñ"));
+		ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_PLO_SINGLEBODYNUM_STATIC, _T("Î´Ñ¡Ôñ"));
+		ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_MAINBOARDNUM_STATIC, _T("Î´Ñ¡Ôñ"));
+		ProjectorTestSystemDlg->m_BeforeOld.SetDlgItemText(IDC_BEFOREOLD_STATIC, _T("Î´Ñ¡Ôñ"));
+		ProjectorTestSystemDlg->m_OldUp.SetDlgItemText(IDC_OLDUP_STATIC, _T("Î´Ñ¡Ôñ"));
+		ProjectorTestSystemDlg->m_OldDown.SetDlgItemText(IDC_OLDDOWN_STATIC, _T("Î´Ñ¡Ôñ"));
+		ProjectorTestSystemDlg->m_AfterOld.SetDlgItemText(IDC_AFTEROLD_STATIC, _T("Î´Ñ¡Ôñ"));
+		ProjectorTestSystemDlg->m_BeforeBright.SetDlgItemText(IDC_BEFOREBRIGHT_STATIC, _T("Î´Ñ¡Ôñ"));
+		ProjectorTestSystemDlg->m_Fix.SetDlgItemText(IDC_FIX_STATIC, _T("Î´Ñ¡Ôñ"));
+		ProjectorTestSystemDlg->m_Fix.SetDlgItemText(IDC_FIX_SINGLEBODYNUM_STATIC, _T("Î´Ñ¡Ôñ"));
+		ProjectorTestSystemDlg->m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, _T("Î´Ñ¡Ôñ"));
+		ProjectorTestSystemDlg->m_Pack.SetDlgItemText(IDC_PACK_STATIC, _T("Î´Ñ¡Ôñ"));
+		ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_ZHIDANNUM, _T("Î´Ñ¡Ôñ"));
 		CDialogEx::OnOK();
 	}
 }

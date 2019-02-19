@@ -403,7 +403,23 @@ BOOL CBeforeBrightDlg::PreTranslateMessage(MSG* pMsg)
 		if (GetFocus()->GetDlgCtrlID() == IDC_BRIGHT_BODY)
 		{
 			try
-			{		
+			{	
+				if (DanNum=="")
+				{
+					MessageBox(_T("请先配置前缀和订单号！"), _T("提示"));
+					m_BrightBodyEditVal = _T("");
+					UpdateData(FALSE);
+					m_BrightBodyEdit.SetFocus();
+					return CDialogEx::PreTranslateMessage(pMsg);
+				}
+				if (m_BrightBodyNumValStr != m_BrightStaticVal || m_BrightBodyEditVal == "")
+				{
+					MessageBox(_T("机身码错误！"), _T("提示"));
+					m_BrightBodyEditVal = _T("");
+					UpdateData(FALSE);
+					m_BrightBodyEdit.SetFocus();
+					return CDialogEx::PreTranslateMessage(pMsg);
+				}
 				m_BrightBodyNumStaticValLength = m_BrightStaticVal.GetLength();
 				m_BrightBodyNumValStr = m_BrightBodyEditVal.Left(m_BrightBodyNumStaticValLength);
 				if (m_BrightBodyNumValStr != m_BrightStaticVal || m_BrightBodyEditVal == "")
@@ -448,7 +464,6 @@ BOOL CBeforeBrightDlg::PreTranslateMessage(MSG* pMsg)
 			{
 				m_WiredLessEdit.EnableWindow(TRUE);
 				m_WiredLessEdit.SetFocus();
-
 				pMsg->message = 0;
 				pMsg->wParam = 0;
 			}
@@ -456,7 +471,6 @@ BOOL CBeforeBrightDlg::PreTranslateMessage(MSG* pMsg)
 			{
 				m_WiredEdit.EnableWindow(TRUE);
 				m_WiredEdit.SetFocus();
-
 				pMsg->message = 0;
 				pMsg->wParam = 0;
 			}
@@ -464,7 +478,6 @@ BOOL CBeforeBrightDlg::PreTranslateMessage(MSG* pMsg)
 			{
 				m_WiredLessEdit.EnableWindow(TRUE);
 				m_WiredLessEdit.SetFocus();
-
 				pMsg->message = 0;
 				pMsg->wParam = 0;
 			}
@@ -515,9 +528,11 @@ BOOL CBeforeBrightDlg::PreTranslateMessage(MSG* pMsg)
 				m_BeforeBright.SetItemText(BrightFirstRow, 5, DanNum);
 				m_WiredLessEditVal = _T("");
 				m_BrightBodyEditVal = _T("");
+				m_WiredEditVal = _T("");
 				UpdateData(FALSE);
 				m_BrightBodyEdit.SetFocus();
 				m_WiredLessEdit.EnableWindow(FALSE);
+				m_WiredEdit.EnableWindow(FALSE);
 			}
 			catch (_com_error &e)
 			{

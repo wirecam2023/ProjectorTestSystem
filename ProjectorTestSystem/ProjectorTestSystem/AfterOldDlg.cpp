@@ -77,6 +77,14 @@ BOOL CAfterOldDlg::PreTranslateMessage(MSG* pMsg)
 	{
 		if (GetFocus()->GetDlgCtrlID() == IDC_AFTEROLDBODY)
 		{	
+			if (DanNum == "")
+			{
+				MessageBox(_T("请先配置前缀和订单号"), _T("提示"));
+				m_AfterOldEditContrl.SetFocus();
+				m_AfterOldBodyEdit = _T("");
+				UpdateData(FALSE);
+				return CDialogEx::PreTranslateMessage(pMsg);
+			}
 			AfterOldStaticLength = m_AfterOldBody.GetLength();
 			AfterOldBodyEditStr = m_AfterOldBodyEdit.Left(AfterOldStaticLength);
 			if (AfterOldBodyEditStr != m_AfterOldBody || m_AfterOldBodyEdit == "")

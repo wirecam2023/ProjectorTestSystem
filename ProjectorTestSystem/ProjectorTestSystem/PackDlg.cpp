@@ -74,6 +74,14 @@ BOOL CPackDlg::PreTranslateMessage(MSG* pMsg)
 	{
 		if (GetFocus()->GetDlgCtrlID() == IDC_PACKEDIT)
 		{
+			if (DanNum == "")
+			{
+				MessageBox(_T("请先配置前缀和订单号"), _T("提示"));
+				m_PackEdit.SetFocus();
+				m_PackEditVal = "";
+				UpdateData(FALSE);
+				return CDialogEx::PreTranslateMessage(pMsg);
+			}
 			m_PackStaticLength = m_PackStatic.GetLength();
 			m_PackEditStr = m_PackEditVal.Left(m_PackStaticLength);
 			if (m_PackEditStr != m_PackStatic || m_PackEditVal == "")
