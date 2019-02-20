@@ -1,31 +1,10 @@
-﻿生成启动时间为 2019/2/19 11:07:09。
+﻿生成启动时间为 2019/2/20 9:13:09。
      1>项目“D:\版本库\ProjectorTestSystem\ProjectorTestSystem\ProjectorTestSystem\ProjectorTestSystem.vcxproj”在节点 2 上(Build 个目标)。
-     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (PJTestSystem_1.0.0_201901280800.vcxproj, PJTestSystem_1.0.0_201902131152.vcxproj, PJTestSystem_1.0.0_201902151649.vcxproj, PJTestSystem_1.0.1_201902151649.vcxproj, ProjectorTestSystem.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-     1>ResourceCompile:
-         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\rc.exe /D _DEBUG /l"0x0804" /IDebug\ /nologo /fo"Debug\ProjectorTestSystem.res" ProjectorTestSystem.rc 
-       Link:
-         E:\vs2013\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\版本库\ProjectorTestSystem\ProjectorTestSystem\Debug\PJTestSystem_1.0.2_201902190952.exe" /INCREMENTAL /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:E:\vs2013\VC\Include\Manifest\dpiaware.manifest /DEBUG /PDB:"D:\版本库\ProjectorTestSystem\ProjectorTestSystem\Debug\PJTestSystem_1.0.2_201902190952.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\版本库\ProjectorTestSystem\ProjectorTestSystem\Debug\PJTestSystem_1.0.2_201902190952.lib" /MACHINE:X86 Debug\ProjectorTestSystem.res
-         Debug\AdminiPassDlg.obj
-         Debug\AdoDB.obj
-         Debug\AfterOldDlg.obj
-         Debug\BeforeBrightDlg.obj
-         Debug\BefroeOldDlg.obj
-         Debug\DeleteSelectTip.obj
-         Debug\FixDlg.obj
-         Debug\InDanNum.obj
-         Debug\MainDlg.obj
-         Debug\OldDownDlg.obj
-         Debug\OldUpDlg.obj
-         Debug\OverDraw.obj
-         Debug\PackDlg.obj
-         Debug\PloDlg.obj
-         Debug\ProjectorTestSystem.obj
-         Debug\ProjectorTestSystemDlg.obj
-         Debug\SetIndexDlg.obj
-         Debug\stdafx.obj
-         ProjectorTestSystem.vcxproj -> D:\版本库\ProjectorTestSystem\ProjectorTestSystem\Debug\PJTestSystem_1.0.2_201902190952.exe
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (PJTestSystem_1.0.0_201901280800.vcxproj, PJTestSystem_1.0.0_201902131152.vcxproj, PJTestSystem_1.0.0_201902151649.vcxproj, PJTestSystem_1.0.1_201902151649.vcxproj, PJTestSystem_1.0.2_201902190952.vcxproj, PJTestSystem_1.0.2_201902191109.vcxproj, ProjectorTestSystem.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+     1>Link:
+         ProjectorTestSystem.vcxproj -> D:\版本库\ProjectorTestSystem\ProjectorTestSystem\Debug\PJTestSystem_1.0.3_201902200831.exe
      1>已完成生成项目“D:\版本库\ProjectorTestSystem\ProjectorTestSystem\ProjectorTestSystem\ProjectorTestSystem.vcxproj”(Build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:01.51
+已用时间 00:00:00.17

@@ -52,4 +52,5 @@ public:
 	CString  GetDate();
 	CString GetExePath();
 	BOOL WritetoTxt(CString sValue);
+	CStatic m_Working;
 };

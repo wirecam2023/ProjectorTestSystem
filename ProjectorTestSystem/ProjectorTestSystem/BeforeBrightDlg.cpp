@@ -16,9 +16,6 @@
 #include "ResizeCtrl.h"
 
 
-
-
-
 /*全局变量*/
 int BrightFirstRow = 0;
 CBeforeBrightDlg *BeforeBrightDlg;
@@ -65,6 +62,7 @@ void CBeforeBrightDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK2, m_BrightCheck2);
 	DDX_Control(pDX, IDC_CHECK3, m_BrightCheck3);
 	DDX_Control(pDX, IDC_RICHEDIT22, m_BrightRich);
+	DDX_Control(pDX, IDC_STATIC101, m_Working);
 }
 
 
@@ -116,10 +114,18 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 	HRESULT hr;
 	CString str, stry, strm, strd, strh, strM, strs,BrightSelectSql,ListCtrlFalg,CtrlFlag;
 	SYSTEMTIME st;
-	CString UpdateBrightToSql,ListFirstColStr,MyTimeStr,ListFirstStr;
+	CString UpdateBrightToSql,ListFirstColStr,MyTimeStr,ListFirstStr,SubEditVal;
 	_variant_t AfterOldTestTime;
-	int DataCount;
-	int ListStraRow, ListCount;
+	int DataCount,ListRowNum;
+	int StaticValLength;
+	StaticValLength = m_BrightStaticVal.GetLength();
+	ListRowNum = 0;
+	UpdateData(TRUE);
+	if (DanNum=="")
+	{
+		MessageBox(_T("请先配置前缀类型和订单号！"), _T("提示"));
+		return;
+	}
 	hr = CoInitialize(NULL);
 	if (FAILED(hr))
 	{
@@ -185,7 +191,7 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 		CString strRowName = _T("");
 		CString ExcleFirstRowNameStr;
 		/*strRowName.Format(_T("%d"), i);*/
-		m_BeforeBright.InsertItem(i - 2, strRowName);
+		/*m_BeforeBright.InsertItem(i - 2, strRowName);*/
 		for (int j = iStartCol; j <= iColNum; j++)
 		{
 			//读取单元格的值
@@ -224,14 +230,14 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 				}
 				if (vResult.vt == VT_R8) //8字节的数字
 				{
-					if (ExcleFirstRowNameStr=="机身码")
+					if (ExcleFirstRowNameStr == "机身码")
 					{
 						str.Format(_T("%g"), vResult.dblVal);
 					}
 					else
 					{
 						str.Format(_T("%f"), vResult.dblVal);
-					}					
+					}
 				}
 				if (ExcleFirstRowNameStr == _T("更新时间")) //时间格式
 				{
@@ -270,19 +276,29 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 				app.Quit();
 				app.ReleaseDispatch();
 				return;
-			}			
-		   switch (ExcelZiDuan[ExcleFirstRowNameStr])
+			}
+			try
+			{
+			switch (ExcelZiDuan[ExcleFirstRowNameStr])
 			{
 			case 1:
+				SubEditVal = str.Left(StaticValLength);
+				if (SubEditVal != m_BrightStaticVal)
+				{
+					m_BrightRich.SetSel(-1, -1);
+					m_BrightRich.ReplaceSel(_T("错误的机身码：") + str + _T("\r\n"));
+					WritetoTxt(_T("错误的机身码：") + str + _T("\r\n"));
+					break;
+				}
 				BrightSelectSql.Format(_T("SELECT * FROM ProjectorInformation_MainTable WHERE FuselageCode = '%s'"), str);
 				OperateDB.OpenRecordset(BrightSelectSql);
 				DataCount = OperateDB.GetRecordCount();
 				if (DataCount == 0)
 				{
-					m_BrightRich.SetSel(-1,-1);
+					m_BrightRich.SetSel(-1, -1);
 					m_BrightRich.ReplaceSel(_T("不存在该机身码：") + str + _T("\r\n"));
 					WritetoTxt(_T("不存在该机身码：") + str + _T("\r\n"));
-					m_BeforeBright.InsertItem(i - 2, strRowName);
+					/*m_BeforeBright.InsertItem(i - 2, strRowName);*/
 					break;
 				}
 				else
@@ -294,36 +310,36 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 						if (AfterOldTestTime.vt == VT_NULL)
 						{
 							m_BrightRich.SetSel(-1, -1);
-							m_BrightRich.ReplaceSel(_T("该产品没有进行老化后测试：") + str +_T("\r\n"));
+							m_BrightRich.ReplaceSel(_T("该产品没有进行老化后测试：") + str + _T("\r\n"));
 							WritetoTxt(_T("该产品没有进行老化后测试：") + str + _T("\r\n"));
-							m_BeforeBright.InsertItem(i - 2, strRowName);
+							/*m_BeforeBright.InsertItem(i - 2, strRowName);*/
 							break;
 						}
 					}
 				}
-				m_BeforeBright.SetItemText(i - 2, 0, str);
+				m_BeforeBright.InsertItem(ListRowNum, str);
 				break;
 			case 2:
-				m_BeforeBright.SetItemText(i - 2, 1, str);	
-				ListFirstColStr = m_BeforeBright.GetItemText(i - 2, 0);
-				UpdateBrightToSql.Format(_T("UPDATE ProjectorInformation_MainTable SET IlluminationValue = '%s',LuminanceTestQTime = '%s' WHERE FuselageCode = '%s'"), str,MyTimeStr, ListFirstColStr);
+				m_BeforeBright.SetItemText(ListRowNum, 1, str);//i-2
+				ListFirstColStr = m_BeforeBright.GetItemText(ListRowNum, 0);
+				UpdateBrightToSql.Format(_T("UPDATE ProjectorInformation_MainTable SET IlluminationValue = '%s',LuminanceTestQTime = '%s' WHERE FuselageCode = '%s'"), str, MyTimeStr, ListFirstColStr);
 				OperateDB.ExecuteByConnection(UpdateBrightToSql);
 				break;
 			case 3:
-				m_BeforeBright.SetItemText(i - 2, 3, str);	
-				ListFirstColStr = m_BeforeBright.GetItemText(i - 2, 0);
+				m_BeforeBright.SetItemText(ListRowNum, 3, str);
+				ListFirstColStr = m_BeforeBright.GetItemText(ListRowNum, 0);
 				UpdateBrightToSql.Format(_T("UPDATE ProjectorInformation_MainTable SET wirelessMAC = '%s', LuminanceTestQTime = '%s'WHERE FuselageCode = '%s'"), str, MyTimeStr, ListFirstColStr);
 				OperateDB.ExecuteByConnection(UpdateBrightToSql);
 				break;
 			case 4:
-				m_BeforeBright.SetItemText(i - 2, 2, str);
-				ListFirstColStr = m_BeforeBright.GetItemText(i - 2, 0);
+				m_BeforeBright.SetItemText(ListRowNum, 2, str);
+				ListFirstColStr = m_BeforeBright.GetItemText(ListRowNum, 0);
 				UpdateBrightToSql.Format(_T("UPDATE ProjectorInformation_MainTable SET WiredMAC = '%s', LuminanceTestQTime = '%s' WHERE FuselageCode = '%s'"), str, MyTimeStr, ListFirstColStr);
 				OperateDB.ExecuteByConnection(UpdateBrightToSql);
 				break;
 			case 5:
-				m_BeforeBright.SetItemText(i - 2, 4, str);	
-				ListFirstColStr = m_BeforeBright.GetItemText(i - 2, 0);
+				m_BeforeBright.SetItemText(ListRowNum, 4, str);
+				ListFirstColStr = m_BeforeBright.GetItemText(ListRowNum, 0);
 				UpdateBrightToSql.Format(_T("UPDATE ProjectorInformation_MainTable SET LuminanceTestTime = '%s', LuminanceTestQTime = '%s' WHERE FuselageCode = '%s'"), str, MyTimeStr, ListFirstColStr);
 				OperateDB.ExecuteByConnection(UpdateBrightToSql);
 				break;
@@ -331,32 +347,42 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 				break;
 			default:
 				break;
-			}	
-		   if (DataCount == 0 || AfterOldTestTime.vt == VT_NULL)
-		   break;
+			}
 		}
-		ListFirstStr = m_BeforeBright.GetItemText(i - 2, 0);
+		   catch (_com_error &e)
+		   {
+			   OperateDB.m_szErrorMsg = e.ErrorMessage();
+			   return;
+		   }
+		   if (DataCount == 0 || AfterOldTestTime.vt == VT_NULL)
+		   {
+			   ListRowNum = ListRowNum;
+               break;
+		   }
+		   
+		}
+		ListFirstStr = m_BeforeBright.GetItemText(ListRowNum, 0);
 		if (ListFirstStr!="")
 		{
-			m_BeforeBright.SetItemText(i - 2, 5, DanNum);
+			m_BeforeBright.SetItemText(ListRowNum, 5, DanNum);
+			ListRowNum++;
 		}
-		else
+		/*else
 		{
 			m_BeforeBright.DeleteItem(i - 2);
-		}
+		}*/	
+		SetDlgItemText(IDC_STATIC101,_T("导入中..."));
 	}
-	CString NullFlag;
+	/*CString NullFlag;
 	ListCount = m_BeforeBright.GetItemCount();
-	for (ListStraRow = 0; ListStraRow <= ListCount; ListStraRow++)
+	for (ListStraRow = m_BeforeBright.GetItemCount() - 1; ListStraRow >= 0; ListStraRow--)
 	{
 		NullFlag = m_BeforeBright.GetItemText(ListStraRow, 0);
 		if (NullFlag == "")
 		{
 			m_BeforeBright.DeleteItem(ListStraRow);
-			ListStraRow = 0;
-			ListCount--;
 		}
-	}
+	}*/
 	ListCtrlFalg = m_BeforeBright.GetItemText(0,0);
 	if (ListCtrlFalg == "")
 	{
@@ -365,6 +391,7 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 	else
 	{
 		MessageBox(_T("导入成功"), _T("提示"));
+		SetDlgItemText(IDC_STATIC101, _T(""));
 	}	
 	/*释放资源*/
 	OperateDB.CloseRecordset();
@@ -407,14 +434,6 @@ BOOL CBeforeBrightDlg::PreTranslateMessage(MSG* pMsg)
 				if (DanNum=="")
 				{
 					MessageBox(_T("请先配置前缀和订单号！"), _T("提示"));
-					m_BrightBodyEditVal = _T("");
-					UpdateData(FALSE);
-					m_BrightBodyEdit.SetFocus();
-					return CDialogEx::PreTranslateMessage(pMsg);
-				}
-				if (m_BrightBodyNumValStr != m_BrightStaticVal || m_BrightBodyEditVal == "")
-				{
-					MessageBox(_T("机身码错误！"), _T("提示"));
 					m_BrightBodyEditVal = _T("");
 					UpdateData(FALSE);
 					m_BrightBodyEdit.SetFocus();

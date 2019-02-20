@@ -96,41 +96,48 @@ BOOL COldDownDlg::PreTranslateMessage(MSG* pMsg)
 				UpdateData(FALSE);
 				return CDialogEx::PreTranslateMessage(pMsg);
 			}
-			OldDownSelectSql.Format(_T("select * from ProjectorInformation_MainTable where FuselageCode = '%s'"), m_OldDownEditVal);
-			OperateDB.OpenRecordset(OldDownSelectSql);
-			OldDownRecordestCount = OperateDB.GetRecordCount();
-			if (OldDownRecordestCount == 0)
-			{
-				MessageBox(_T("不存在的机身码"), _T("提示"));
-				OperateDB.CloseRecordset();
-				m_OldDownEdit.SetFocus();
-				m_OldDownEditVal = "";
-				UpdateData(FALSE);
-				return CDialogEx::PreTranslateMessage(pMsg);
+			try{
+				OldDownSelectSql.Format(_T("select * from ProjectorInformation_MainTable where FuselageCode = '%s'"), m_OldDownEditVal);
+				OperateDB.OpenRecordset(OldDownSelectSql);
+				OldDownRecordestCount = OperateDB.GetRecordCount();
+				if (OldDownRecordestCount == 0)
+				{
+					MessageBox(_T("不存在的机身码"), _T("提示"));
+					OperateDB.CloseRecordset();
+					m_OldDownEdit.SetFocus();
+					m_OldDownEditVal = "";
+					UpdateData(FALSE);
+					return CDialogEx::PreTranslateMessage(pMsg);
+				}
+				if (!OperateDB.m_pRecordset->BOF)
+					OperateDB.m_pRecordset->MoveFirst();
+				OldUpTime = OperateDB.m_pRecordset->GetCollect(_T("AgeingBeginTime"));
+				if (OldUpTime.vt == VT_NULL)
+				{
+					MessageBox(_T("该产品没有上架老化"), _T("提示"));
+					OperateDB.CloseRecordset();
+					m_OldDownEdit.SetFocus();
+					m_OldDownEditVal = "";
+					UpdateData(FALSE);
+					return CDialogEx::PreTranslateMessage(pMsg);
+				}
+				else
+				{
+					OldDownTimeStr = GetTime();
+					OldDownUpdataSql.Format(_T("UPDATE ProjectorInformation_MainTable SET AgeingEndTime = '%s' WHERE FuselageCode = '%s'"), OldDownTimeStr, m_OldDownEditVal);
+					OperateDB.ExecuteByConnection(OldDownUpdataSql);
+					m_OldDownlist.InsertItem(OldDownFirstRow, m_OldDownEditVal);
+					m_OldDownlist.SetItemText(OldDownFirstRow, 1, OldDownTimeStr);
+					OperateDB.CloseRecordset();
+					m_OldDownEdit.SetFocus();
+					m_OldDownEditVal = "";
+					UpdateData(FALSE);
+				}
 			}
-			if (!OperateDB.m_pRecordset->BOF)
-				OperateDB.m_pRecordset->MoveFirst();
-			OldUpTime = OperateDB.m_pRecordset->GetCollect(_T("AgeingBeginTime"));
-			if (OldUpTime.vt==VT_NULL)
+			catch (_com_error &e)
 			{
-				MessageBox(_T("该产品没有上架老化"), _T("提示"));
-				OperateDB.CloseRecordset();
-				m_OldDownEdit.SetFocus();
-				m_OldDownEditVal = "";
-				UpdateData(FALSE);
-				return CDialogEx::PreTranslateMessage(pMsg);
-			}
-			else
-			{
-				OldDownTimeStr = GetTime();
-				OldDownUpdataSql.Format(_T("UPDATE ProjectorInformation_MainTable SET AgeingEndTime = '%s' WHERE FuselageCode = '%s'"), OldDownTimeStr, m_OldDownEditVal);
-				OperateDB.ExecuteByConnection(OldDownUpdataSql);
-				m_OldDownlist.InsertItem(OldDownFirstRow, m_OldDownEditVal);
-				m_OldDownlist.SetItemText(OldDownFirstRow, 1, OldDownTimeStr);
-				OperateDB.CloseRecordset();
-				m_OldDownEdit.SetFocus();
-				m_OldDownEditVal = "";
-				UpdateData(FALSE);
+				AfxMessageBox(e.Description());
+				return CDialogEx::PreTranslateMessage(pMsg);;
 			}
 
 		}

@@ -92,41 +92,48 @@ BOOL CPackDlg::PreTranslateMessage(MSG* pMsg)
 				UpdateData(FALSE);
 				return CDialogEx::PreTranslateMessage(pMsg);
 			}
-			PackSelectSql.Format(_T("select * from ProjectorInformation_MainTable where FuselageCode = '%s'"), m_PackEditVal);
-			OperateDB.OpenRecordset(PackSelectSql);
-			PackRecordestCount = OperateDB.GetRecordCount();
-			if (PackRecordestCount == 0)
-			{
-				MessageBox(_T("不存在的机身码"), _T("提示"));
-				OperateDB.CloseRecordset();
-				m_PackEdit.SetFocus();
-				m_PackEditVal = "";
-				UpdateData(FALSE);
-				return CDialogEx::PreTranslateMessage(pMsg);
+			try{
+				PackSelectSql.Format(_T("select * from ProjectorInformation_MainTable where FuselageCode = '%s'"), m_PackEditVal);
+				OperateDB.OpenRecordset(PackSelectSql);
+				PackRecordestCount = OperateDB.GetRecordCount();
+				if (PackRecordestCount == 0)
+				{
+					MessageBox(_T("不存在的机身码"), _T("提示"));
+					OperateDB.CloseRecordset();
+					m_PackEdit.SetFocus();
+					m_PackEditVal = "";
+					UpdateData(FALSE);
+					return CDialogEx::PreTranslateMessage(pMsg);
+				}
+				if (!OperateDB.m_pRecordset->BOF)
+					OperateDB.m_pRecordset->MoveFirst();
+				BrightTime = OperateDB.m_pRecordset->GetCollect(_T("LuminanceTestTime"));
+				if (BrightTime.vt == VT_NULL)
+				{
+					MessageBox(_T("该产品没有进行亮度测试"), _T("提示"));
+					OperateDB.CloseRecordset();
+					m_PackEdit.SetFocus();
+					m_PackEditVal = "";
+					UpdateData(FALSE);
+					return CDialogEx::PreTranslateMessage(pMsg);
+				}
+				else
+				{
+					PackTimeStr = GetTime();
+					PackUpdataSql.Format(_T("UPDATE ProjectorInformation_MainTable SET PackingTime = '%s' WHERE FuselageCode = '%s'"), PackTimeStr, m_PackEditVal);
+					OperateDB.ExecuteByConnection(PackUpdataSql);
+					m_PackList.InsertItem(PackFirstRow, m_PackEditVal);
+					m_PackList.SetItemText(PackFirstRow, 1, PackTimeStr);
+					OperateDB.CloseRecordset();
+					m_PackEdit.SetFocus();
+					m_PackEditVal = "";
+					UpdateData(FALSE);
+				}
 			}
-			if (!OperateDB.m_pRecordset->BOF)
-				OperateDB.m_pRecordset->MoveFirst();
-			BrightTime = OperateDB.m_pRecordset->GetCollect(_T("LuminanceTestTime"));
-			if (BrightTime.vt==VT_NULL)
+			catch (_com_error &e)
 			{
-				MessageBox(_T("该产品没有进行亮度测试"), _T("提示"));
-				OperateDB.CloseRecordset();
-				m_PackEdit.SetFocus();
-				m_PackEditVal = "";
-				UpdateData(FALSE);
-				return CDialogEx::PreTranslateMessage(pMsg);
-			}
-			else
-			{
-				PackTimeStr = GetTime();
-				PackUpdataSql.Format(_T("UPDATE ProjectorInformation_MainTable SET PackingTime = '%s' WHERE FuselageCode = '%s'"), PackTimeStr, m_PackEditVal);
-				OperateDB.ExecuteByConnection(PackUpdataSql);
-				m_PackList.InsertItem(PackFirstRow, m_PackEditVal);
-				m_PackList.SetItemText(PackFirstRow, 1, PackTimeStr);
-				OperateDB.CloseRecordset();
-				m_PackEdit.SetFocus();
-				m_PackEditVal = "";
-				UpdateData(FALSE);
+				AfxMessageBox(e.Description());
+				return CDialogEx::PreTranslateMessage(pMsg);;
 			}
 		}
 		PackFirstRow++;

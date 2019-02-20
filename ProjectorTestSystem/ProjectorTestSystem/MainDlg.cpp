@@ -202,9 +202,9 @@ void CMainDlg::OnBnClickedCheckindb()
 	if (mWiredLessMac != "")
 		TermWiredLess.Format(_T("wirelessMAC = '%s'"), mWiredLessMac);
 	SelectSql = _T("select * from ProjectorInformation_MainTable where ") + TermZhiDan + TermBody + TermSingleBody + TermMainBoard + TermWired + TermWiredLess;
-	OperateDB.OpenRecordset(SelectSql);
 		try
 		{
+			OperateDB.OpenRecordset(SelectSql);
 			if (!OperateDB.m_pRecordset->BOF)
 				OperateDB.m_pRecordset->MoveFirst();
 			else
@@ -324,6 +324,13 @@ BOOL CMainDlg::PreTranslateMessage(MSG* pMsg)
 void CMainDlg::OnBnClickedWritetoexcel()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	CString ListFirstStr; 
+	ListFirstStr = m_MainList.GetItemText(0,0);
+	if (ListFirstStr == "")
+	{
+		MessageBox(_T("当前页面没有数据，导出失败!"),_T("提示"));
+		return;
+	}
 	WriteToExcelFunc();
 }
 
@@ -457,74 +464,82 @@ void CMainDlg::OnBnClickedDeleteselect()
 		MessageBox(_T("未选中数据"), _T("提示"));
 	}
 	else
-	{   
+	{
 		nRes = DeleteSelectTipDlg.DoModal();
-		if (nRes==IDCANCEL)
+		if (nRes == IDCANCEL)
 		{
 			m_MainList.SetItemState(-1, 0, LVIS_SELECTED);
 			m_MainList.SetSelectionMark(-1);
 			return;
 		}
 		pos = m_MainList.GetFirstSelectedItemPosition();
-		for (ErgodicOne = m_MainList.GetItemCount() - 1; ErgodicOne >= 0; ErgodicOne--)
-		{
-			Index = m_MainList.GetNextSelectedItem(pos);			
-			BeSelectBodyNum = m_MainList.GetItemText(Index, 1);//机身码1
-			MOpticalCode = m_MainList.GetItemText(Index, 2);//光机编码2
-			MPolishingMachineTime = m_MainList.GetItemText(Index, 3);//打光机时间3
-			MPreAgingTestTime = m_MainList.GetItemText(Index, 6);//老化前第一次测试时间4
-			MAgeingBeginTime = m_MainList.GetItemText(Index, 8);//老化上架5
-			MAgeingEndTime = m_MainList.GetItemText(Index, 9);//老化下架6
-			MPostAgingTestTime = m_MainList.GetItemText(Index, 10);//老化后第一次7
-			MPreAgingTestTime2 = m_MainList.GetItemText(Index, 7);//老化前第二次8		
-			MPostAgingTestTime2 = m_MainList.GetItemText(Index, 11);//老化后第二次9
-			MIlluminationValue = m_MainList.GetItemText(Index, 13);//照度值10
-			MWiredMAC = m_MainList.GetItemText(Index, 14);//有线mac11
-			MwirelessMAC = m_MainList.GetItemText(Index, 15);//无线mac12
-			MLuminanceTestTime = m_MainList.GetItemText(Index, 16);//亮度测试时间13
-			MRepairText = m_MainList.GetItemText(Index, 17);//维修描述14
-			MRepairTime = m_MainList.GetItemText(Index, 20);//维修时间15
-			MPackingTime = m_MainList.GetItemText(Index, 21);//包装时间16
-			MMainBoardCode = m_MainList.GetItemText(Index, 4);//主板编码17
-			MMainBoardTime = m_MainList.GetItemText(Index, 5);//打主板时间18
-			MZhiDan = m_MainList.GetItemText(Index, 0);//订单19
-			MAfterMaintenanceOpticalCode = m_MainList.GetItemText(Index, 18);//维修后光机码20
-			MAfterMaintenanceMainBoardCode = m_MainList.GetItemText(Index, 19);//维修后主板码21
-			MLuminanceTestQTime = m_MainList.GetItemText(Index, 12);//亮度测试前22
-			CheckSql.Format(_T("select * from ProjectorInformation_MainTable_BackUp where FuselageCode = '%s'"), BeSelectBodyNum);
-			OperateDB.OpenRecordset(CheckSql);
-			CheckCount = OperateDB.GetRecordCount();
-			OperateDB.CloseRecordset();
-			if (CheckCount==0)
+		try{
+			for (ErgodicOne = m_MainList.GetItemCount() - 1; ErgodicOne >= 0; ErgodicOne--)
 			{
-				if (BeSelectBodyNum!="")
+				Index = m_MainList.GetNextSelectedItem(pos);
+				BeSelectBodyNum = m_MainList.GetItemText(ErgodicOne, 1);//机身码1
+				MOpticalCode = m_MainList.GetItemText(ErgodicOne, 2);//光机编码2
+				MPolishingMachineTime = m_MainList.GetItemText(ErgodicOne, 3);//打光机时间3
+				MPreAgingTestTime = m_MainList.GetItemText(ErgodicOne, 6);//老化前第一次测试时间4
+				MAgeingBeginTime = m_MainList.GetItemText(ErgodicOne, 8);//老化上架5
+				MAgeingEndTime = m_MainList.GetItemText(ErgodicOne, 9);//老化下架6
+				MPostAgingTestTime = m_MainList.GetItemText(ErgodicOne, 10);//老化后第一次7
+				MPreAgingTestTime2 = m_MainList.GetItemText(ErgodicOne, 7);//老化前第二次8		
+				MPostAgingTestTime2 = m_MainList.GetItemText(ErgodicOne, 11);//老化后第二次9
+				MIlluminationValue = m_MainList.GetItemText(ErgodicOne, 13);//照度值10
+				MWiredMAC = m_MainList.GetItemText(ErgodicOne, 14);//有线mac11
+				MwirelessMAC = m_MainList.GetItemText(ErgodicOne, 15);//无线mac12
+				MLuminanceTestTime = m_MainList.GetItemText(ErgodicOne, 16);//亮度测试时间13
+				MRepairText = m_MainList.GetItemText(ErgodicOne, 17);//维修描述14
+				MRepairTime = m_MainList.GetItemText(ErgodicOne, 20);//维修时间15
+				MPackingTime = m_MainList.GetItemText(ErgodicOne, 21);//包装时间16
+				MMainBoardCode = m_MainList.GetItemText(ErgodicOne, 4);//主板编码17
+				MMainBoardTime = m_MainList.GetItemText(ErgodicOne, 5);//打主板时间18
+				MZhiDan = m_MainList.GetItemText(ErgodicOne, 0);//订单19
+				MAfterMaintenanceOpticalCode = m_MainList.GetItemText(ErgodicOne, 18);//维修后光机码20
+				MAfterMaintenanceMainBoardCode = m_MainList.GetItemText(ErgodicOne, 19);//维修后主板码21
+				MLuminanceTestQTime = m_MainList.GetItemText(ErgodicOne, 12);//亮度测试前22
+				CheckSql.Format(_T("select * from ProjectorInformation_MainTable_BackUp where FuselageCode = '%s'"), BeSelectBodyNum);
+				OperateDB.OpenRecordset(CheckSql);
+				CheckCount = OperateDB.GetRecordCount();
+				OperateDB.CloseRecordset();
+				if (CheckCount == 0)
 				{
-					InsertTosql.Format(_T("INSERT INTO ProjectorInformation_MainTable_BackUp VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"), \
-						BeSelectBodyNum, MOpticalCode, MPolishingMachineTime, MPreAgingTestTime, MAgeingBeginTime, MAgeingEndTime, MPostAgingTestTime, \
-						MPreAgingTestTime2, MPostAgingTestTime2, MIlluminationValue, MWiredMAC, MwirelessMAC, MLuminanceTestTime, MRepairText, MRepairTime, MPackingTime, \
-						MMainBoardCode, MMainBoardTime, MZhiDan, MAfterMaintenanceOpticalCode, MAfterMaintenanceMainBoardCode, MLuminanceTestQTime);
-					OperateDB.ExecuteByConnection(InsertTosql);
-				}				
+					if (BeSelectBodyNum != "")
+					{
+						InsertTosql.Format(_T("INSERT INTO ProjectorInformation_MainTable_BackUp VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"), \
+							BeSelectBodyNum, MOpticalCode, MPolishingMachineTime, MPreAgingTestTime, MAgeingBeginTime, MAgeingEndTime, MPostAgingTestTime, \
+							MPreAgingTestTime2, MPostAgingTestTime2, MIlluminationValue, MWiredMAC, MwirelessMAC, MLuminanceTestTime, MRepairText, MRepairTime, MPackingTime, \
+							MMainBoardCode, MMainBoardTime, MZhiDan, MAfterMaintenanceOpticalCode, MAfterMaintenanceMainBoardCode, MLuminanceTestQTime);
+						OperateDB.ExecuteByConnection(InsertTosql);
+					}
+				}
+				else
+				{
+					UpdateToSql.Format(_T("UPDATE Person SET OpticalCode = '%s', PolishingMachineTime = '%s',PreAgingTestTime = '%s',AgeingBeginTime = '%s',\
+										  									  AgeingEndTime = '%s',PostAgingTestTime = '%s',PreAgingTestTime2 = '%s',PostAgingTestTime2 = '%s',\
+																			  									  IlluminationValue = '%s',WiredMAC = '%s',wirelessMAC = '%s',LuminanceTestTime = '%s',\
+																												  									  RepairText = '%s',RepairTime = '%s',PackingTime = '%s',MainBoardCode = '%s',\
+																																					  									  MainBoardTime = '%s',ZhiDan = '%s',AfterMaintenanceOpticalCode = '%s',AfterMaintenanceMainBoardCode = '%s',LuminanceTestQTime = '%s' WHERE FuselageCode = '%s'"), \
+																																														  MOpticalCode, MPolishingMachineTime, MPreAgingTestTime, MAgeingBeginTime, MAgeingEndTime, MPostAgingTestTime, \
+																																														  MPreAgingTestTime2, MPostAgingTestTime2, MIlluminationValue, MWiredMAC, MwirelessMAC, MLuminanceTestTime, MRepairText, MRepairTime, MPackingTime, \
+																																														  MMainBoardCode, MMainBoardTime, MZhiDan, MAfterMaintenanceOpticalCode, MAfterMaintenanceMainBoardCode, MLuminanceTestQTime, BeSelectBodyNum);
+					OperateDB.ExecuteByConnection(UpdateToSql);
+				}
+				DeleteSql.Format(_T("DELETE FROM ProjectorInformation_MainTable WHERE FuselageCode = '%s'"), BeSelectBodyNum);
+				DeleteSqlFinshFlag = OperateDB.ExecuteByConnection(DeleteSql);
+				if (m_MainList.GetItemState(ErgodicOne, LVIS_SELECTED) == LVIS_SELECTED)
+					m_MainList.DeleteItem(ErgodicOne);
 			}
-			else
-			{
-				UpdateToSql.Format(_T("UPDATE Person SET OpticalCode = '%s', PolishingMachineTime = '%s',PreAgingTestTime = '%s',AgeingBeginTime = '%s',\
-									  AgeingEndTime = '%s',PostAgingTestTime = '%s',PreAgingTestTime2 = '%s',PostAgingTestTime2 = '%s',\
-									  IlluminationValue = '%s',WiredMAC = '%s',wirelessMAC = '%s',LuminanceTestTime = '%s',\
-									  RepairText = '%s',RepairTime = '%s',PackingTime = '%s',MainBoardCode = '%s',\
-									  MainBoardTime = '%s',ZhiDan = '%s',AfterMaintenanceOpticalCode = '%s',AfterMaintenanceMainBoardCode = '%s',LuminanceTestQTime = '%s' WHERE FuselageCode = '%s'"),\
-									  MOpticalCode, MPolishingMachineTime, MPreAgingTestTime, MAgeingBeginTime, MAgeingEndTime, MPostAgingTestTime, \
-									  MPreAgingTestTime2, MPostAgingTestTime2, MIlluminationValue, MWiredMAC, MwirelessMAC, MLuminanceTestTime, MRepairText, MRepairTime, MPackingTime, \
-									  MMainBoardCode, MMainBoardTime, MZhiDan, MAfterMaintenanceOpticalCode, MAfterMaintenanceMainBoardCode, MLuminanceTestQTime, BeSelectBodyNum);
-				OperateDB.ExecuteByConnection(UpdateToSql);
-			}				
-			DeleteSql.Format(_T("DELETE FROM ProjectorInformation_MainTable WHERE FuselageCode = '%s'"), BeSelectBodyNum);		
-			DeleteSqlFinshFlag = OperateDB.ExecuteByConnection(DeleteSql);
-			if (m_MainList.GetItemState(ErgodicOne, LVIS_SELECTED) == LVIS_SELECTED)
-				m_MainList.DeleteItem(ErgodicOne);
+
 		}
-			
+		catch (_com_error &e)
+		{
+			AfxMessageBox(e.Description());
+			return ;
+		}
 	}
+	
 	if (DeleteSqlFinshFlag==TRUE)
 	{
 		MessageBox(_T("删除成功！"), _T("提示"));
@@ -552,65 +567,72 @@ void CMainDlg::OnBnClickedDeleteall()
 	else
 	{
 		MyIDOK = MessageBox(_T("您确定要删除界面中的所有数据吗？"), _T("提示"), MB_OK | MB_OKCANCEL);
-		if (MyIDOK==2)
+		if (MyIDOK == 2)
 		{
 			return;
 		}
-		for (ErgodicAll = 0; ErgodicAll< ItemCount; ErgodicAll++)
-		{
-			DeleteAllBodyNum = m_MainList.GetItemText(ErgodicAll, 1);//光机码1
-			AOpticalCode = m_MainList.GetItemText(ErgodicAll, 2);//光机编码2
-			APolishingMachineTime = m_MainList.GetItemText(ErgodicAll, 3);//打光机时间3
-			APreAgingTestTime = m_MainList.GetItemText(ErgodicAll, 6);//老化前第一次测试时间4
-			AAgeingBeginTime = m_MainList.GetItemText(ErgodicAll, 8);//老化上架5
-			AAgeingEndTime = m_MainList.GetItemText(ErgodicAll, 9);//老化下架6
-			APostAgingTestTime = m_MainList.GetItemText(ErgodicAll, 10);//老化后第一次7
-			APreAgingTestTime2 = m_MainList.GetItemText(ErgodicAll, 7);//老化前第二次8		
-			APostAgingTestTime2 = m_MainList.GetItemText(ErgodicAll, 11);//老化后第二次9
-			AIlluminationValue = m_MainList.GetItemText(ErgodicAll, 13);//照度值10
-			AWiredMAC = m_MainList.GetItemText(ErgodicAll, 14);//有线mac11
-			AwirelessMAC = m_MainList.GetItemText(ErgodicAll, 15);//无线mac12
-			ALuminanceTestTime = m_MainList.GetItemText(ErgodicAll, 16);//亮度测试时间13
-			ARepairText = m_MainList.GetItemText(ErgodicAll, 17);//维修描述14
-			ARepairTime = m_MainList.GetItemText(ErgodicAll, 20);//维修时间15
-			APackingTime = m_MainList.GetItemText(ErgodicAll, 21);//包装时间16
-			AMainBoardCode = m_MainList.GetItemText(ErgodicAll, 4);//主板编码17
-			AMainBoardTime = m_MainList.GetItemText(ErgodicAll, 5);//打主板时间18
-			AZhiDan = m_MainList.GetItemText(ErgodicAll, 0);//订单19
-			AAfterMaintenanceOpticalCode = m_MainList.GetItemText(ErgodicAll, 18);//维修后光机码20
-			AAfterMaintenanceMainBoardCode = m_MainList.GetItemText(ErgodicAll, 19);//维修后主板码21
-			ALuminanceTestQTime = m_MainList.GetItemText(ErgodicAll, 12);//亮度测试前22
-			MyCheckSql.Format(_T("select * from ProjectorInformation_MainTable_BackUp where FuselageCode = '%s'"), DeleteAllBodyNum);
-			OperateDB.OpenRecordset(MyCheckSql);
-			CheckCount = OperateDB.GetRecordCount();
-			OperateDB.CloseRecordset();
-			if (CheckCount==0)
+		try{
+			for (ErgodicAll = 0; ErgodicAll < ItemCount; ErgodicAll++)
 			{
-				if (DeleteAllBodyNum!="")
+				DeleteAllBodyNum = m_MainList.GetItemText(ErgodicAll, 1);//光机码1
+				AOpticalCode = m_MainList.GetItemText(ErgodicAll, 2);//光机编码2
+				APolishingMachineTime = m_MainList.GetItemText(ErgodicAll, 3);//打光机时间3
+				APreAgingTestTime = m_MainList.GetItemText(ErgodicAll, 6);//老化前第一次测试时间4
+				AAgeingBeginTime = m_MainList.GetItemText(ErgodicAll, 8);//老化上架5
+				AAgeingEndTime = m_MainList.GetItemText(ErgodicAll, 9);//老化下架6
+				APostAgingTestTime = m_MainList.GetItemText(ErgodicAll, 10);//老化后第一次7
+				APreAgingTestTime2 = m_MainList.GetItemText(ErgodicAll, 7);//老化前第二次8		
+				APostAgingTestTime2 = m_MainList.GetItemText(ErgodicAll, 11);//老化后第二次9
+				AIlluminationValue = m_MainList.GetItemText(ErgodicAll, 13);//照度值10
+				AWiredMAC = m_MainList.GetItemText(ErgodicAll, 14);//有线mac11
+				AwirelessMAC = m_MainList.GetItemText(ErgodicAll, 15);//无线mac12
+				ALuminanceTestTime = m_MainList.GetItemText(ErgodicAll, 16);//亮度测试时间13
+				ARepairText = m_MainList.GetItemText(ErgodicAll, 17);//维修描述14
+				ARepairTime = m_MainList.GetItemText(ErgodicAll, 20);//维修时间15
+				APackingTime = m_MainList.GetItemText(ErgodicAll, 21);//包装时间16
+				AMainBoardCode = m_MainList.GetItemText(ErgodicAll, 4);//主板编码17
+				AMainBoardTime = m_MainList.GetItemText(ErgodicAll, 5);//打主板时间18
+				AZhiDan = m_MainList.GetItemText(ErgodicAll, 0);//订单19
+				AAfterMaintenanceOpticalCode = m_MainList.GetItemText(ErgodicAll, 18);//维修后光机码20
+				AAfterMaintenanceMainBoardCode = m_MainList.GetItemText(ErgodicAll, 19);//维修后主板码21
+				ALuminanceTestQTime = m_MainList.GetItemText(ErgodicAll, 12);//亮度测试前22
+				MyCheckSql.Format(_T("select * from ProjectorInformation_MainTable_BackUp where FuselageCode = '%s'"), DeleteAllBodyNum);
+				OperateDB.OpenRecordset(MyCheckSql);
+				CheckCount = OperateDB.GetRecordCount();
+				OperateDB.CloseRecordset();
+				if (CheckCount == 0)
 				{
-					InsertSql.Format(_T("INSERT INTO ProjectorInformation_MainTable_BackUp VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"), \
-						DeleteAllBodyNum, AOpticalCode, APolishingMachineTime, APreAgingTestTime, AAgeingBeginTime, AAgeingEndTime, APostAgingTestTime, \
-						APreAgingTestTime2, APostAgingTestTime2, AIlluminationValue, AWiredMAC, AwirelessMAC, ALuminanceTestTime, ARepairText, ARepairTime, APackingTime, \
-						AMainBoardCode, AMainBoardTime, AZhiDan, AAfterMaintenanceOpticalCode, AAfterMaintenanceMainBoardCode, ALuminanceTestQTime);
-					OperateDB.ExecuteByConnection(InsertSql);
-				}				
+					if (DeleteAllBodyNum != "")
+					{
+						InsertSql.Format(_T("INSERT INTO ProjectorInformation_MainTable_BackUp VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"), \
+							DeleteAllBodyNum, AOpticalCode, APolishingMachineTime, APreAgingTestTime, AAgeingBeginTime, AAgeingEndTime, APostAgingTestTime, \
+							APreAgingTestTime2, APostAgingTestTime2, AIlluminationValue, AWiredMAC, AwirelessMAC, ALuminanceTestTime, ARepairText, ARepairTime, APackingTime, \
+							AMainBoardCode, AMainBoardTime, AZhiDan, AAfterMaintenanceOpticalCode, AAfterMaintenanceMainBoardCode, ALuminanceTestQTime);
+						OperateDB.ExecuteByConnection(InsertSql);
+					}
+				}
+				else
+				{
+					UpdateSql.Format(_T("UPDATE Person SET OpticalCode = '%s', PolishingMachineTime = '%s',PreAgingTestTime = '%s',AgeingBeginTime = '%s',\
+																		  AgeingEndTime = '%s',PostAgingTestTime = '%s',PreAgingTestTime2 = '%s',PostAgingTestTime2 = '%s',\
+																		  								 IlluminationValue = '%s',WiredMAC = '%s',wirelessMAC = '%s',LuminanceTestTime = '%s',\
+																										 								RepairText = '%s',RepairTime = '%s',PackingTime = '%s',MainBoardCode = '%s',\
+																																										MainBoardTime = '%s',ZhiDan = '%s',AfterMaintenanceOpticalCode = '%s',AfterMaintenanceMainBoardCode = '%s',LuminanceTestQTime = '%s' WHERE FuselageCode = '%s'"), \
+																																										AOpticalCode, APolishingMachineTime, APreAgingTestTime, AAgeingBeginTime, AAgeingEndTime, APostAgingTestTime, \
+																																										APreAgingTestTime2, APostAgingTestTime2, AIlluminationValue, AWiredMAC, AwirelessMAC, ALuminanceTestTime, ARepairText, ARepairTime, APackingTime, \
+																																										AMainBoardCode, AMainBoardTime, AZhiDan, AAfterMaintenanceOpticalCode, AAfterMaintenanceMainBoardCode, ALuminanceTestQTime, DeleteAllBodyNum);
+				}
+				SqlDeleteAll.Format(_T("DELETE FROM ProjectorInformation_MainTable WHERE FuselageCode = '%s'"), DeleteAllBodyNum);
+				DeleteAllSqlFinshFlag = OperateDB.ExecuteByConnection(SqlDeleteAll);
 			}
-			else
-			{
-				UpdateSql.Format(_T("UPDATE Person SET OpticalCode = '%s', PolishingMachineTime = '%s',PreAgingTestTime = '%s',AgeingBeginTime = '%s',\
-								  AgeingEndTime = '%s',PostAgingTestTime = '%s',PreAgingTestTime2 = '%s',PostAgingTestTime2 = '%s',\
-								 IlluminationValue = '%s',WiredMAC = '%s',wirelessMAC = '%s',LuminanceTestTime = '%s',\
-								RepairText = '%s',RepairTime = '%s',PackingTime = '%s',MainBoardCode = '%s',\
-								MainBoardTime = '%s',ZhiDan = '%s',AfterMaintenanceOpticalCode = '%s',AfterMaintenanceMainBoardCode = '%s',LuminanceTestQTime = '%s' WHERE FuselageCode = '%s'"), \
-								AOpticalCode, APolishingMachineTime, APreAgingTestTime, AAgeingBeginTime, AAgeingEndTime, APostAgingTestTime, \
-								APreAgingTestTime2, APostAgingTestTime2, AIlluminationValue, AWiredMAC, AwirelessMAC, ALuminanceTestTime, ARepairText, ARepairTime, APackingTime, \
-								AMainBoardCode, AMainBoardTime, AZhiDan, AAfterMaintenanceOpticalCode, AAfterMaintenanceMainBoardCode, ALuminanceTestQTime, DeleteAllBodyNum);
-			}
-			SqlDeleteAll.Format(_T("DELETE FROM ProjectorInformation_MainTable WHERE FuselageCode = '%s'"), DeleteAllBodyNum);
-			DeleteAllSqlFinshFlag = OperateDB.ExecuteByConnection(SqlDeleteAll);
+			DeleteAllFinshFlag = m_MainList.DeleteAllItems();
 		}
-		DeleteAllFinshFlag = m_MainList.DeleteAllItems();
-	}	
+		catch (_com_error &e)
+		{
+			AfxMessageBox(e.Description());
+			return;
+		}
+	}
 	if (DeleteAllFinshFlag == TRUE&&DeleteAllSqlFinshFlag==TRUE)
 	{
 		MessageBox(_T("删除成功！"), _T("提示"));

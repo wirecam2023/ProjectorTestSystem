@@ -93,44 +93,50 @@ BOOL COldUpDlg::PreTranslateMessage(MSG* pMsg)
 				UpdateData(FALSE);
 				return CDialogEx::PreTranslateMessage(pMsg);
 			}
-			OldUpSelectSql.Format(_T("select * from ProjectorInformation_MainTable where FuselageCode = '%s'"), m_OldUpEditVal);
-			OperateDB.OpenRecordset(OldUpSelectSql);
-			OldUpRecordestCount = OperateDB.GetRecordCount();
-			if (OldUpRecordestCount == 0)
-			{
-				MessageBox(_T("不存在的机身码"), _T("提示"));
-				OperateDB.CloseRecordset();
-				m_OldUpEdit.SetFocus();
-				m_OldUpEditVal = "";
-				UpdateData(FALSE);
-				OperateDB.CloseRecordset();
-				return CDialogEx::PreTranslateMessage(pMsg);
+			try{
+				OldUpSelectSql.Format(_T("select * from ProjectorInformation_MainTable where FuselageCode = '%s'"), m_OldUpEditVal);
+				OperateDB.OpenRecordset(OldUpSelectSql);
+				OldUpRecordestCount = OperateDB.GetRecordCount();
+				if (OldUpRecordestCount == 0)
+				{
+					MessageBox(_T("不存在的机身码"), _T("提示"));
+					OperateDB.CloseRecordset();
+					m_OldUpEdit.SetFocus();
+					m_OldUpEditVal = "";
+					UpdateData(FALSE);
+					OperateDB.CloseRecordset();
+					return CDialogEx::PreTranslateMessage(pMsg);
+				}
+				if (!OperateDB.m_pRecordset->BOF)
+					OperateDB.m_pRecordset->MoveFirst();
+				FirstOldTime = OperateDB.m_pRecordset->GetCollect(_T("PreAgingTestTime"));
+				if (FirstOldTime.vt == VT_NULL)
+				{
+					MessageBox(_T("该产品未做老化前测试"), _T("提示"));
+					OperateDB.CloseRecordset();
+					m_OldUpEdit.SetFocus();
+					m_OldUpEditVal = "";
+					UpdateData(FALSE);
+					return CDialogEx::PreTranslateMessage(pMsg);
+				}
+				else
+				{
+					OldUpTimeStr = GetTime();
+					OldUpUpdataSql.Format(_T("UPDATE ProjectorInformation_MainTable SET AgeingBeginTime = '%s' WHERE FuselageCode = '%s'"), OldUpTimeStr, m_OldUpEditVal);
+					OperateDB.ExecuteByConnection(OldUpUpdataSql);
+					m_OldUpList.InsertItem(OldFirstRow, m_OldUpEditVal);
+					m_OldUpList.SetItemText(OldFirstRow, 1, OldUpTimeStr);
+					OperateDB.CloseRecordset();
+					m_OldUpEdit.SetFocus();
+					m_OldUpEditVal = "";
+					UpdateData(FALSE);
+				}
 			}
-			if (!OperateDB.m_pRecordset->BOF)
-				OperateDB.m_pRecordset->MoveFirst();
-			FirstOldTime = OperateDB.m_pRecordset->GetCollect(_T("PreAgingTestTime"));
-			if (FirstOldTime.vt==VT_NULL)
+			catch (_com_error &e)
 			{
-				MessageBox(_T("该产品未做老化前测试"), _T("提示"));
-				OperateDB.CloseRecordset();
-				m_OldUpEdit.SetFocus();
-				m_OldUpEditVal = "";
-				UpdateData(FALSE);
-				return CDialogEx::PreTranslateMessage(pMsg);
+				AfxMessageBox(e.Description());
+				return CDialogEx::PreTranslateMessage(pMsg);;
 			}
-			else
-			{
-				OldUpTimeStr = GetTime();
-				OldUpUpdataSql.Format(_T("UPDATE ProjectorInformation_MainTable SET AgeingBeginTime = '%s' WHERE FuselageCode = '%s'"), OldUpTimeStr, m_OldUpEditVal);
-				OperateDB.ExecuteByConnection(OldUpUpdataSql);
-				m_OldUpList.InsertItem(OldFirstRow, m_OldUpEditVal);
-				m_OldUpList.SetItemText(OldFirstRow, 1, OldUpTimeStr);
-				OperateDB.CloseRecordset();
-				m_OldUpEdit.SetFocus();
-				m_OldUpEditVal = "";
-				UpdateData(FALSE);
-			}
-
 		}
 		OldFirstRow++;
 	}
