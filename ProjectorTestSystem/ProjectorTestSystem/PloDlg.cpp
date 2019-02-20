@@ -193,6 +193,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 							m_PloList.InsertItem(FirstRow, m_BodyNumVal);
 							m_PloList.SetItemText(FirstRow, 3, TimeStr);
 							m_PloList.SetItemText(FirstRow, 4, DanNum);
+							FirstRow++;
 							m_BodyNumVal = _T("");
 							UpdateData(FALSE);
 							m_PloBodyNumSub.SetFocus();
@@ -271,6 +272,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 								m_PloList.SetItemText(FirstRow, 1, m_SingleBodyNumVal);
 								m_PloList.SetItemText(FirstRow, 3, TimeStr);
 								m_PloList.SetItemText(FirstRow, 4, DanNum);
+								FirstRow++;
 								m_SingleBodyNumVal = _T("");
 								m_BodyNumVal = _T("");
 								UpdateData(FALSE);
@@ -346,6 +348,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 							m_PloList.SetItemText(FirstRow, 3, TimeStr);
 							m_PloList.SetItemText(FirstRow, 4, DanNum);
 							m_PloList.SetItemText(FirstRow,2,m_MainBoardNumVal);
+							FirstRow++;
 							m_BodyNumVal = _T("");
 							m_SingleBodyNumVal = _T("");
 							m_MainBoardNumVal = _T("");
@@ -360,10 +363,10 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 						return CDialogEx::PreTranslateMessage(pMsg);
 					}																		
 			}
-			if (pMsg->message != 0 && pMsg->wParam != 0)
+			/*if (pMsg->message != 0 && pMsg->wParam != 0)
 			{
 				FirstRow++;
-			}
+			}*/
 		}			
 	return CDialogEx::PreTranslateMessage(pMsg);
 }

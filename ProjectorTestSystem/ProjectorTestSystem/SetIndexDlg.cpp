@@ -22,7 +22,7 @@
 CString m_TypeName,BodyNum, SingleBodyNum, MainBoardNum;
 HTREEITEM IsSelect;
 extern CProjectorTestSystemDlg * ProjectorTestSystemDlg;
-
+BOOL NewIndexTypeFlag = FALSE;
 
 
 //extern CSetIndexDlg * SetIndexDlg;
@@ -159,6 +159,7 @@ void CSetIndexDlg::OnBnClickedNew()
 	SetDlgItemText(IDC_SINGLETOOLINDEX, _T(""));
 	SetDlgItemText(IDC_INDEXTYPE, _T(""));
 	SetDlgItemText(IDC_MAININDEX,_T(""));
+	NewIndexTypeFlag = TRUE;
 	m_IndexType.SetFocus();
 }
 
@@ -176,6 +177,7 @@ void CSetIndexDlg::OnBnClickedSave()
 	if (Indextype=="")
 	{
 		MessageBox(_T("前缀类型名不能为空"), _T("提示"));
+		NewIndexTypeFlag = FALSE;
 		return;
 	}
 	CheckSql.Format(_T("SELECT * FROM ProjectorInformation_EncodingRules WHERE TypeName = '%s' and Prefix_BodyCode = '%s' and Prefix_OpticalCode = '%s' and Prefix_MotherboardEncoding = '%s'"), Indextype, SubBodyNum, SubSingleBodyNum, SubMainBoardNum);
@@ -184,7 +186,8 @@ void CSetIndexDlg::OnBnClickedSave()
 	OperateDB.CloseRecordset();
 	if (IndexCount!=0)
 	{
-		MessageBox(_T("前缀已存在,无需新建"), _T("提示"));
+		MessageBox(_T("前缀已存在,无需新建或修改"), _T("提示"));
+		NewIndexTypeFlag = FALSE;
 		InsertFinshFlag = TRUE;
 	}
 	else
@@ -197,13 +200,25 @@ void CSetIndexDlg::OnBnClickedSave()
 		{
 			SqlInsert.Format(_T("insert into ProjectorInformation_EncodingRules values('%s','%s','%s','%s')"), Indextype, SubBodyNum, SubSingleBodyNum, SubMainBoardNum);
 			InsertFinshFlag = OperateDB.ExecuteByConnection(SqlInsert);
+			NewIndexTypeFlag = FALSE;
 			MessageBox(_T("保存成功！"), _T("提示"));
 		}
 		else
 		{
-			SqlInsert.Format(_T("UPDATE ProjectorInformation_EncodingRules SET Prefix_BodyCode ='%s',Prefix_OpticalCode='%s',Prefix_MotherboardEncoding='%s' WHERE TypeName = '%s'"), SubBodyNum, SubSingleBodyNum, SubMainBoardNum, Indextype);
-			InsertFinshFlag = OperateDB.ExecuteByConnection(SqlInsert);
-			MessageBox(_T("保存成功！"), _T("提示"));
+			if (NewIndexTypeFlag==TRUE)
+			{
+				MessageBox(_T("前缀类型名重复，请重新新建！"),_T("提示"));
+				return;
+			}
+			else
+			{
+				SqlInsert.Format(_T("UPDATE ProjectorInformation_EncodingRules SET Prefix_BodyCode ='%s',Prefix_OpticalCode='%s',Prefix_MotherboardEncoding='%s' WHERE TypeName = '%s'"), SubBodyNum, SubSingleBodyNum, SubMainBoardNum, Indextype);
+				InsertFinshFlag = OperateDB.ExecuteByConnection(SqlInsert);
+				NewIndexTypeFlag = FALSE;
+				MessageBox(_T("保存成功！"), _T("提示"));
+
+			}
+		
 		}		
 	}
 	//if (Indextype == m_TypeName&&IndexCount != 0)
@@ -212,7 +227,6 @@ void CSetIndexDlg::OnBnClickedSave()
 	//	InsertFinshFlag = OperateDB.ExecuteByConnection(SqlUpdate);
 	//	MessageBox(_T("保存成功！"));
 	//}
-
 	if (InsertFinshFlag==TRUE)
 	{
 		m_SetIndex.DeleteAllItems();
@@ -282,6 +296,7 @@ void CSetIndexDlg::OnBnClickedAbortion()
 	m_Delete.EnableWindow(TRUE);
 	m_SetIndex.EnableWindow(TRUE);
 	m_New.EnableWindow(TRUE);	
+	NewIndexTypeFlag = FALSE;
 }
 
 /*修改按钮*/
@@ -304,9 +319,9 @@ void CSetIndexDlg::OnBnClickedChange()
 	m_BodyNum.SetReadOnly(FALSE);
 	m_SingleBodyNum.SetReadOnly(FALSE);
 	m_MainBoardNum.SetReadOnly(FALSE);
-	m_IndexType.SetReadOnly(FALSE);
+	m_IndexType.SetReadOnly(TRUE);
 	m_SetIndex.EnableWindow(FALSE);
-	m_IndexType.SetFocus();
+	m_BodyNum.SetFocus();
 }
 
 /*树形控件响应函数*/
@@ -388,6 +403,7 @@ void CSetIndexDlg::OnBnClickedOk()
 		ProjectorTestSystemDlg->m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, MainBoardNumPrefix);
 		ProjectorTestSystemDlg->m_Pack.SetDlgItemText(IDC_PACK_STATIC, BodyNumPrefix);
 		ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_ZHIDANNUM, DanNum);
+		NewIndexTypeFlag = FALSE;
 		CDialogEx::OnOK();
 	}
 	else
@@ -405,6 +421,7 @@ void CSetIndexDlg::OnBnClickedOk()
 		ProjectorTestSystemDlg->m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, _T("未选择"));
 		ProjectorTestSystemDlg->m_Pack.SetDlgItemText(IDC_PACK_STATIC, _T("未选择"));
 		ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_ZHIDANNUM, _T("未选择"));
+		NewIndexTypeFlag = FALSE;
 		CDialogEx::OnOK();
 	}
 }

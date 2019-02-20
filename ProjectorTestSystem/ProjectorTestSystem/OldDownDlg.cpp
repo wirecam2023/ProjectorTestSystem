@@ -56,7 +56,7 @@ BOOL COldDownDlg::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	m_OldDownlist.SetExtendedStyle(m_OldDownlist.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	m_OldDownlist.InsertColumn(0, _T("机身码"), LVCFMT_CENTER, 150, 0);
-	m_OldDownlist.InsertColumn(1, _T("第一次测试时间"), LVCFMT_CENTER, 150, 1);
+	m_OldDownlist.InsertColumn(1, _T("更新时间"), LVCFMT_CENTER, 150, 1);
 	OldDownDlg = this;
 	OldDown.Init(m_hWnd);
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -97,12 +97,12 @@ BOOL COldDownDlg::PreTranslateMessage(MSG* pMsg)
 				return CDialogEx::PreTranslateMessage(pMsg);
 			}
 			try{
-				OldDownSelectSql.Format(_T("select * from ProjectorInformation_MainTable where FuselageCode = '%s'"), m_OldDownEditVal);
+				OldDownSelectSql.Format(_T("select * from ProjectorInformation_MainTable where FuselageCode = '%s' and ZhiDan = '%s'"), m_OldDownEditVal,DanNum);
 				OperateDB.OpenRecordset(OldDownSelectSql);
 				OldDownRecordestCount = OperateDB.GetRecordCount();
 				if (OldDownRecordestCount == 0)
 				{
-					MessageBox(_T("不存在的机身码"), _T("提示"));
+					MessageBox(_T("本订单内不存在该机身码"), _T("提示"));
 					OperateDB.CloseRecordset();
 					m_OldDownEdit.SetFocus();
 					m_OldDownEditVal = "";
@@ -128,6 +128,7 @@ BOOL COldDownDlg::PreTranslateMessage(MSG* pMsg)
 					OperateDB.ExecuteByConnection(OldDownUpdataSql);
 					m_OldDownlist.InsertItem(OldDownFirstRow, m_OldDownEditVal);
 					m_OldDownlist.SetItemText(OldDownFirstRow, 1, OldDownTimeStr);
+					OldDownFirstRow++;
 					OperateDB.CloseRecordset();
 					m_OldDownEdit.SetFocus();
 					m_OldDownEditVal = "";
@@ -141,7 +142,6 @@ BOOL COldDownDlg::PreTranslateMessage(MSG* pMsg)
 			}
 
 		}
-		OldDownFirstRow++;
 	}
 	return CDialogEx::PreTranslateMessage(pMsg);
 }

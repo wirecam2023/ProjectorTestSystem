@@ -121,12 +121,12 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 					UpdateData(FALSE);
 					return CDialogEx::PreTranslateMessage(pMsg);
 				}
-				SelectSqlEdit1.Format(_T("SELECT * FROM ProjectorInformation_MainTable WHERE FuselageCode = '%s'"), m_FixSingleBodyEditVal);
+				SelectSqlEdit1.Format(_T("SELECT * FROM ProjectorInformation_MainTable WHERE FuselageCode = '%s'and ZhiDan = '%s'"), m_FixSingleBodyEditVal,DanNum);
 				OperateDB.OpenRecordset(SelectSqlEdit1);
 				FixRecodestCount = OperateDB.GetRecordCount();
 				if (FixRecodestCount == 0)
 				{
-					MessageBox(_T("不存在的机身码"), _T("提示"));
+					MessageBox(_T("本订单内不存在该机身码"), _T("提示"));
 					OperateDB.CloseRecordset();
 					m_FixSingleNumEdit.SetFocus();
 					m_FixSingleBodyEditVal = "";
@@ -177,6 +177,7 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 					m_FixList.InsertItem(FixFirstRow, m_FixSingleBodyEditVal);
 					m_FixList.SetItemText(FixFirstRow, 1, m_FixTextVal);
 					m_FixList.SetItemText(FixFirstRow, 4, FixTimeStr);
+					FixFirstRow++;
 					m_FixTextVal = _T("");
 					m_FixSingleBodyEditVal = _T("");
 					UpdateData(FALSE);
@@ -254,6 +255,7 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 					m_FixList.SetItemText(FixFirstRow, 1, m_FixTextVal);
 					m_FixList.SetItemText(FixFirstRow, 4, FixTimeStr);
 					m_FixList.SetItemText(FixFirstRow, 2, m_AfterFixSingleEditVal);
+					FixFirstRow++;
 					m_AfterFixSingleEditVal = _T("");
 					m_FixSingleBodyEditVal = _T("");
 					m_FixTextVal = _T("");
@@ -328,7 +330,8 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 				if (m_FixSingleBodyState == TRUE)
 				{
 					m_FixList.SetItemText(FixFirstRow, 2, m_AfterFixSingleEditVal);
-				}			
+				}		
+				FixFirstRow++;
 				m_FixSingleBodyEditVal = _T("");
 				m_FixTextVal = _T("");
 				m_AfterFixSingleEditVal = _T("");
@@ -344,10 +347,10 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 				return CDialogEx::PreTranslateMessage(pMsg);
 			}
 		}
-		if (pMsg->message != 0 && pMsg->wParam != 0)
+		/*if (pMsg->message != 0 && pMsg->wParam != 0)
 		{
 			FixFirstRow++;
-		}
+		}*/
 	}
 	return CDialogEx::PreTranslateMessage(pMsg);
 }

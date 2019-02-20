@@ -35,6 +35,15 @@ extern CAfterOldDlg *AfterOldDlg;
 extern CBeforeBrightDlg *BeforeBrightDlg;
 extern CFixDlg *FixDlg;
 extern CPackDlg *PackDlg;
+extern int FirstRow;
+extern int AfterOldFirstRow;
+extern int BrightFirstRow;
+extern int BeforeOldFirstRow;
+extern int FixFirstRow;
+extern int OldDownFirstRow;
+extern int OldFirstRow;
+extern int PackFirstRow;
+extern int PackFirstRow;
 CWindowSizeMange PJTestSystemDlg;
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框MO
 
@@ -629,6 +638,15 @@ void CProjectorTestSystemDlg::OnLogOut()
 			m_Plo.m_PloSingleBodyNumEdit.EnableWindow(FALSE);
 			m_Plo.m_PloMainBoardNumEcit.EnableWindow(FALSE);
 			m_Plo.m_PloList.DeleteAllItems();
+			FirstRow = 0;
+			AfterOldFirstRow = 0;
+			BrightFirstRow = 0;
+			BeforeOldFirstRow = 0;
+			FixFirstRow = 0;
+			OldDownFirstRow = 0;
+			OldFirstRow = 0;
+			PackFirstRow = 0;
+			PackFirstRow = 0;
 			m_Fix.SetDlgItemTextA(IDC_FIXBODY,_T(""));
 			m_Fix.SetDlgItemTextA(IDC_FIXTEXT, _T(""));
 			m_Fix.SetDlgItemTextA(IDC_AFTERFIX_SINGLEBODY, _T(""));
@@ -669,6 +687,8 @@ void CProjectorTestSystemDlg::OnLogOut()
 			m_Fix.SetDlgItemText(IDC_FIX_SINGLEBODYNUM_STATIC, _T(""));
 			m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, _T(""));
 			m_Pack.SetDlgItemText(IDC_PACK_STATIC, _T(""));
+			DanNum = "";
+
 		}
 		GetMenu()->GetSubMenu(0)->EnableMenuItem(0, MF_BYPOSITION | MF_ENABLED);
 		GetMenu()->GetSubMenu(0)->EnableMenuItem(1, MF_BYPOSITION | MF_DISABLED);

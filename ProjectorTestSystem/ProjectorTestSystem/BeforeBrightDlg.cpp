@@ -290,14 +290,14 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 					WritetoTxt(_T("错误的机身码：") + str + _T("\r\n"));
 					break;
 				}
-				BrightSelectSql.Format(_T("SELECT * FROM ProjectorInformation_MainTable WHERE FuselageCode = '%s'"), str);
+				BrightSelectSql.Format(_T("SELECT * FROM ProjectorInformation_MainTable WHERE FuselageCode = '%s' and ZhiDan = '%s'"), str,DanNum);
 				OperateDB.OpenRecordset(BrightSelectSql);
 				DataCount = OperateDB.GetRecordCount();
 				if (DataCount == 0)
 				{
 					m_BrightRich.SetSel(-1, -1);
-					m_BrightRich.ReplaceSel(_T("不存在该机身码：") + str + _T("\r\n"));
-					WritetoTxt(_T("不存在该机身码：") + str + _T("\r\n"));
+					m_BrightRich.ReplaceSel(_T("本订单内不存在该机身码：") + str + _T("\r\n"));
+					WritetoTxt(_T("本订单内不存在该机身码：") + str + _T("\r\n"));
 					/*m_BeforeBright.InsertItem(i - 2, strRowName);*/
 					break;
 				}
@@ -387,6 +387,10 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 	if (ListCtrlFalg == "")
 	{
 		MessageBox(_T("未导入任何数据或者全部导入失败，请确认是否导入了错误的表格"), _T("提示"));
+		m_BeforeBright.DeleteAllItems();
+		BrightFirstRow = 0;
+		SetDlgItemText(IDC_STATIC101, _T(""));
+		ListRowNum = 0;
 	}
 	else
 	{
@@ -449,12 +453,12 @@ BOOL CBeforeBrightDlg::PreTranslateMessage(MSG* pMsg)
 					m_BrightBodyEdit.SetFocus();
 					return CDialogEx::PreTranslateMessage(pMsg);
 				}
-				SelectSqlEdit1.Format(_T("SELECT * FROM ProjectorInformation_MainTable WHERE FuselageCode = '%s'"), m_BrightBodyEditVal);
+				SelectSqlEdit1.Format(_T("SELECT * FROM ProjectorInformation_MainTable WHERE FuselageCode = '%s' and ZhiDan = '%s'"), m_BrightBodyEditVal,DanNum);
 				OperateDB.OpenRecordset(SelectSqlEdit1);
 				BrightRecodestCount = OperateDB.GetRecordCount();
 				if (BrightRecodestCount == 0)
 				{
-					MessageBox(_T("不存在的机身码"), _T("提示"));
+					MessageBox(_T("本订单内不存在该机身码"), _T("提示"));
 					m_BrightBodyEditVal = _T("");
 					UpdateData(FALSE);
 					m_BrightBodyEdit.SetFocus();
@@ -471,6 +475,7 @@ BOOL CBeforeBrightDlg::PreTranslateMessage(MSG* pMsg)
 					m_BrightBodyEditVal = "";
 					UpdateData(FALSE);
 					OperateDB.CloseRecordset();
+					return CDialogEx::PreTranslateMessage(pMsg);
 				}
 				OperateDB.CloseRecordset();
 			}
@@ -513,6 +518,7 @@ BOOL CBeforeBrightDlg::PreTranslateMessage(MSG* pMsg)
 					m_BeforeBright.SetItemText(BrightFirstRow, 3, m_WiredLessEditVal);
 					m_BeforeBright.SetItemText(BrightFirstRow, 4, BrightTimeStr);
 					m_BeforeBright.SetItemText(BrightFirstRow, 5, DanNum);
+					BrightFirstRow++;
 					m_WiredLessEditVal = _T("");
 					m_BrightBodyEditVal = _T("");
 					UpdateData(FALSE);
@@ -545,6 +551,7 @@ BOOL CBeforeBrightDlg::PreTranslateMessage(MSG* pMsg)
 				m_BeforeBright.SetItemText(BrightFirstRow, 4, BrightTimeStr);
 				m_BeforeBright.SetItemText(BrightFirstRow, 2, m_WiredEditVal);
 				m_BeforeBright.SetItemText(BrightFirstRow, 5, DanNum);
+				BrightFirstRow++;
 				m_WiredLessEditVal = _T("");
 				m_BrightBodyEditVal = _T("");
 				m_WiredEditVal = _T("");
@@ -559,11 +566,12 @@ BOOL CBeforeBrightDlg::PreTranslateMessage(MSG* pMsg)
 				return CDialogEx::PreTranslateMessage(pMsg);
 			}
 		}
-		if (pMsg->message != 0 && pMsg->wParam != 0)
-		{
-			BrightFirstRow++;
-		}
+		//if (pMsg->message != 0 && pMsg->wParam != 0)
+		//{
+		//	BrightFirstRow++;
+		//}
 	}
+
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 

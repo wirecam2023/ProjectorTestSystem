@@ -24,4 +24,5 @@ public:
 	CEdit m_InDanNum;
 	virtual BOOL OnInitDialog();
 	CString CheckNull(_variant_t Source);
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

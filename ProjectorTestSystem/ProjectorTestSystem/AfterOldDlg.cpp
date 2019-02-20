@@ -97,12 +97,12 @@ BOOL CAfterOldDlg::PreTranslateMessage(MSG* pMsg)
 			}
 			try
 			{
-				AfterOldSelectSql.Format(_T("select * from ProjectorInformation_MainTable where FuselageCode = '%s'"), m_AfterOldBodyEdit);
+				AfterOldSelectSql.Format(_T("select * from ProjectorInformation_MainTable where FuselageCode = '%s' and ZhiDan = '%s'"), m_AfterOldBodyEdit,DanNum);
 				OperateDB.OpenRecordset(AfterOldSelectSql);
 				AfterOldRecodCount = OperateDB.GetRecordCount();
 				if (AfterOldRecodCount == 0)
 				{
-					MessageBox(_T("不存在的机身码"),_T("提示"));
+					MessageBox(_T("本订单内不存在该机身码"),_T("提示"));
 					m_AfterOldEditContrl.SetFocus();
 					m_AfterOldBodyEdit = "";
 					UpdateData(FALSE);
@@ -135,6 +135,7 @@ BOOL CAfterOldDlg::PreTranslateMessage(MSG* pMsg)
 					OperateDB.ExecuteByConnection(AfterOldUpdateSql);
 					m_AfetrOldList.InsertItem(AfterOldFirstRow, m_AfterOldBodyEdit);
 					m_AfetrOldList.SetItemText(AfterOldFirstRow, 1, FirstAfterTimeStr);
+					AfterOldFirstRow++;
 					OperateDB.CloseRecordset();
 					m_AfterOldEditContrl.SetFocus();
 					m_AfterOldBodyEdit = "";
@@ -151,6 +152,7 @@ BOOL CAfterOldDlg::PreTranslateMessage(MSG* pMsg)
 					m_AfetrOldList.InsertItem(AfterOldFirstRow, m_AfterOldBodyEdit);
 					m_AfetrOldList.SetItemText(AfterOldFirstRow, 1, sTimeOneAfterStr);
 					m_AfetrOldList.SetItemText(AfterOldFirstRow, 2, SecondAfterTimeStr);
+					AfterOldFirstRow++;
 					OperateDB.CloseRecordset();
 					m_AfterOldEditContrl.SetFocus();
 					m_AfterOldBodyEdit = "";
@@ -164,7 +166,6 @@ BOOL CAfterOldDlg::PreTranslateMessage(MSG* pMsg)
 			}
 
 		}
-		AfterOldFirstRow++;
 	}
 	return CDialogEx::PreTranslateMessage(pMsg);
 }

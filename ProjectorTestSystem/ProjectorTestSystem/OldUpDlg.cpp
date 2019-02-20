@@ -94,12 +94,12 @@ BOOL COldUpDlg::PreTranslateMessage(MSG* pMsg)
 				return CDialogEx::PreTranslateMessage(pMsg);
 			}
 			try{
-				OldUpSelectSql.Format(_T("select * from ProjectorInformation_MainTable where FuselageCode = '%s'"), m_OldUpEditVal);
+				OldUpSelectSql.Format(_T("select * from ProjectorInformation_MainTable where FuselageCode = '%s' and ZhiDan = '%s'"), m_OldUpEditVal,DanNum);
 				OperateDB.OpenRecordset(OldUpSelectSql);
 				OldUpRecordestCount = OperateDB.GetRecordCount();
 				if (OldUpRecordestCount == 0)
 				{
-					MessageBox(_T("不存在的机身码"), _T("提示"));
+					MessageBox(_T("本订单内不存在该机身码"), _T("提示"));
 					OperateDB.CloseRecordset();
 					m_OldUpEdit.SetFocus();
 					m_OldUpEditVal = "";
@@ -126,6 +126,7 @@ BOOL COldUpDlg::PreTranslateMessage(MSG* pMsg)
 					OperateDB.ExecuteByConnection(OldUpUpdataSql);
 					m_OldUpList.InsertItem(OldFirstRow, m_OldUpEditVal);
 					m_OldUpList.SetItemText(OldFirstRow, 1, OldUpTimeStr);
+					OldFirstRow++;
 					OperateDB.CloseRecordset();
 					m_OldUpEdit.SetFocus();
 					m_OldUpEditVal = "";
@@ -138,7 +139,6 @@ BOOL COldUpDlg::PreTranslateMessage(MSG* pMsg)
 				return CDialogEx::PreTranslateMessage(pMsg);;
 			}
 		}
-		OldFirstRow++;
 	}
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
