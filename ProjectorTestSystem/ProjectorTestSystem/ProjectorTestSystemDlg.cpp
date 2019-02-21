@@ -44,6 +44,7 @@ extern int OldDownFirstRow;
 extern int OldFirstRow;
 extern int PackFirstRow;
 extern int PackFirstRow;
+extern BOOL NewIndexTypeFlag;
 CWindowSizeMange PJTestSystemDlg;
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框MO
 
@@ -675,18 +676,20 @@ void CProjectorTestSystemDlg::OnLogOut()
 			m_BeforeBright.m_BrightCheck1.SetCheck(FALSE);
 			m_BeforeBright.m_BrightCheck2.SetCheck(FALSE);
 			m_BeforeBright.m_BrightCheck3.SetCheck(FALSE);
-			m_Plo.SetDlgItemText(IDC_PLO_BODYNUM_STATIC, _T(""));
-			m_Plo.SetDlgItemText(IDC_PLO_SINGLEBODYNUM_STATIC, _T(""));
-			m_Plo.SetDlgItemText(IDC_MAINBOARDNUM_STATIC, _T(""));
-			m_BeforeOld.SetDlgItemText(IDC_BEFOREOLD_STATIC, _T(""));
-			m_OldUp.SetDlgItemText(IDC_OLDUP_STATIC, _T(""));
-			m_OldDown.SetDlgItemText(IDC_OLDDOWN_STATIC, _T(""));
-			m_AfterOld.SetDlgItemText(IDC_AFTEROLD_STATIC, _T(""));
-			m_BeforeBright.SetDlgItemText(IDC_BEFOREBRIGHT_STATIC, _T(""));
-			m_Fix.SetDlgItemText(IDC_FIX_STATIC, _T(""));
-			m_Fix.SetDlgItemText(IDC_FIX_SINGLEBODYNUM_STATIC, _T(""));
-			m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, _T(""));
-			m_Pack.SetDlgItemText(IDC_PACK_STATIC, _T(""));
+			ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_PLO_BODYNUM_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_PLO_SINGLEBODYNUM_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_MAINBOARDNUM_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_BeforeOld.SetDlgItemText(IDC_BEFOREOLD_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_OldUp.SetDlgItemText(IDC_OLDUP_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_OldDown.SetDlgItemText(IDC_OLDDOWN_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_AfterOld.SetDlgItemText(IDC_AFTEROLD_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_BeforeBright.SetDlgItemText(IDC_BEFOREBRIGHT_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_Fix.SetDlgItemText(IDC_FIX_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_Fix.SetDlgItemText(IDC_FIX_SINGLEBODYNUM_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_Pack.SetDlgItemText(IDC_PACK_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_ZHIDANNUM, _T("未选择"));
+			NewIndexTypeFlag = FALSE;
 			DanNum = "";
 
 		}

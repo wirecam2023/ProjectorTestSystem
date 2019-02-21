@@ -10,7 +10,7 @@
 
 /*全局变量*/
 extern CProjectorTestSystemDlg * ProjectorTestSystemDlg;
-
+CInDanNum * InDanNum;
 
 // CInDanNum 对话框
 
@@ -49,7 +49,7 @@ void CInDanNum::OnBnClickedOk()
 	_variant_t TypeVal, BodyVal, SingleBodyVal, MainVal;
 	GetDlgItemText(IDC_DANNUMBER, DanNum);
 	if (DanNum.IsEmpty())
-	{
+	{ 
 		MessageBox(_T("订单号不能为空，请重新输入！"),_T("提示"));
 		ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_PLO_BODYNUM_STATIC, _T("未选择"));
 		ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_PLO_SINGLEBODYNUM_STATIC, _T("未选择"));
@@ -122,7 +122,10 @@ BOOL CInDanNum::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
+	
 	m_InDanNum.SetFocus();
+	SetDlgItemTextA(IDC_DANNUMBER, DanNum);
+	InDanNum = this;
 	return FALSE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }

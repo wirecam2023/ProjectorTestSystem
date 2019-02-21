@@ -22,6 +22,7 @@
 CString m_TypeName,BodyNum, SingleBodyNum, MainBoardNum;
 HTREEITEM IsSelect;
 extern CProjectorTestSystemDlg * ProjectorTestSystemDlg;
+extern CInDanNum * InDanNum;
 BOOL NewIndexTypeFlag = FALSE;
 
 
@@ -426,3 +427,11 @@ void CSetIndexDlg::OnBnClickedOk()
 	}
 }
 	
+
+
+void CSetIndexDlg::OnCancel()
+{
+	// TODO:  在此添加专用代码和/或调用基类
+	NewIndexTypeFlag = FALSE;
+	CDialogEx::OnCancel();
+}

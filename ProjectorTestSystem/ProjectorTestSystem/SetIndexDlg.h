@@ -45,4 +45,5 @@ public:
 	afx_msg void OnBnClickedOk();
 public:
 	
+	virtual void OnCancel();
 };
