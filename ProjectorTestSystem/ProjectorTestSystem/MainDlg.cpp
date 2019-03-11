@@ -88,7 +88,7 @@ BOOL CMainDlg::OnInitDialog()
 	// 为列表视图控件添加三列   
 	m_MainList.InsertColumn(0, _T("订单号"), LVCFMT_CENTER, 60, 0);
 	m_MainList.InsertColumn(1, _T("机身码"), LVCFMT_CENTER, 60, 1);
-	m_MainList.InsertColumn(2, _T("光机编码"), LVCFMT_CENTER, 60, 2);
+	m_MainList.InsertColumn(2, _T("光机码"), LVCFMT_CENTER, 60, 2);
 	m_MainList.InsertColumn(3, _T("打光机作业时间"), LVCFMT_CENTER, 105, 3);
 	m_MainList.InsertColumn(4, _T("主板编码"), LVCFMT_CENTER, 60, 4);
 	m_MainList.InsertColumn(5, _T("打主板作业时间"), LVCFMT_CENTER,105, 5);
@@ -104,7 +104,7 @@ BOOL CMainDlg::OnInitDialog()
 	m_MainList.InsertColumn(15, _T("无线MAC"), LVCFMT_CENTER, 60, 15);
 	m_MainList.InsertColumn(16, _T("亮度测试时间"), LVCFMT_CENTER, 90, 16);
 	m_MainList.InsertColumn(17, _T("维修描述"), LVCFMT_CENTER, 60, 17);
-	m_MainList.InsertColumn(18, _T("维修后光机编码"), LVCFMT_CENTER,105, 18);
+	m_MainList.InsertColumn(18, _T("维修后光机码"), LVCFMT_CENTER,105, 18);
 	m_MainList.InsertColumn(19, _T("维修后主板编码"), LVCFMT_CENTER,105, 19);
 	m_MainList.InsertColumn(20, _T("维修时间"), LVCFMT_CENTER,60, 20);
 	m_MainList.InsertColumn(21, _T("包装时间"), LVCFMT_CENTER, 60, 21);
@@ -271,7 +271,9 @@ void CMainDlg::OnBnClickedCheckindb()
 				m_MainList.SetItemText(RowNum, 19, AfterMaintenanceMainBoardCode);
 				m_MainList.SetItemText(RowNum, 20, RepairTimeStr);
 				m_MainList.SetItemText(RowNum, 21, PackingTimeStr);
+				m_MainList.EnsureVisible(m_MainList.GetItemCount() - 1, FALSE);
 				OperateDB.m_pRecordset->MoveNext();
+				m_MainList.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 				RowNum++;
 			}
 			OperateDB.CloseRecordset();

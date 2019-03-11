@@ -116,7 +116,7 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 	SYSTEMTIME st;
 	CString UpdateBrightToSql,ListFirstColStr,MyTimeStr,ListFirstStr,SubEditVal;
 	_variant_t AfterOldTestTime;
-	int DataCount,ListRowNum;
+	int DataCount=0,ListRowNum;
 	int StaticValLength;
 	StaticValLength = m_BrightStaticVal.GetLength();
 	ListRowNum = 0;
@@ -287,6 +287,7 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 				{
 					m_BrightRich.SetSel(-1, -1);
 					m_BrightRich.ReplaceSel(_T("错误的机身码：") + str + _T("\r\n"));
+					m_BrightRich.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 					WritetoTxt(_T("错误的机身码：") + str + _T("\r\n"));
 					break;
 				}
@@ -297,6 +298,7 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 				{
 					m_BrightRich.SetSel(-1, -1);
 					m_BrightRich.ReplaceSel(_T("本订单内不存在该机身码：") + str + _T("\r\n"));
+					m_BrightRich.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 					WritetoTxt(_T("本订单内不存在该机身码：") + str + _T("\r\n"));
 					/*m_BeforeBright.InsertItem(i - 2, strRowName);*/
 					break;
@@ -311,6 +313,7 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 						{
 							m_BrightRich.SetSel(-1, -1);
 							m_BrightRich.ReplaceSel(_T("该产品没有进行老化后测试：") + str + _T("\r\n"));
+							m_BrightRich.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 							WritetoTxt(_T("该产品没有进行老化后测试：") + str + _T("\r\n"));
 							/*m_BeforeBright.InsertItem(i - 2, strRowName);*/
 							break;
@@ -365,6 +368,7 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 		if (ListFirstStr!="")
 		{
 			m_BeforeBright.SetItemText(ListRowNum, 5, DanNum);
+			m_BeforeBright.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 			ListRowNum++;
 		}
 		/*else

@@ -1,9 +1,9 @@
-﻿// Created by Microsoft (R) C/C++ Compiler Version 12.00.40629.0 (aa2bccd4).
+﻿// Created by Microsoft (R) C/C++ Compiler Version 14.15.26729.0 (63877707).
 //
-// d:\版本库\projectortestsystem\projectortestsystem\projectortestsystem\release\msado15.tli
+// f:\版本库\projectortestsystem\projectortestsystem\projectortestsystem\release\msado15.tli
 //
 // Wrapper implementations for type library c:\program files\common files\system\ado\msado15.dll
-// compiler-generated file created 02/13/19 at 09:14:13 - DO NOT EDIT!
+// compiler-generated file created 03/11/19 at 09:20:47 - DO NOT EDIT!
 
 #pragma once
 

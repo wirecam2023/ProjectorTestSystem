@@ -128,6 +128,7 @@ BOOL COldDownDlg::PreTranslateMessage(MSG* pMsg)
 					OperateDB.ExecuteByConnection(OldDownUpdataSql);
 					m_OldDownlist.InsertItem(OldDownFirstRow, m_OldDownEditVal);
 					m_OldDownlist.SetItemText(OldDownFirstRow, 1, OldDownTimeStr);
+					m_OldDownlist.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 					OldDownFirstRow++;
 					OperateDB.CloseRecordset();
 					m_OldDownEdit.SetFocus();

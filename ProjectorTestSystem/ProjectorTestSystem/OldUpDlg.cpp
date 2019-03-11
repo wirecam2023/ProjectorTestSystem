@@ -126,6 +126,7 @@ BOOL COldUpDlg::PreTranslateMessage(MSG* pMsg)
 					OperateDB.ExecuteByConnection(OldUpUpdataSql);
 					m_OldUpList.InsertItem(OldFirstRow, m_OldUpEditVal);
 					m_OldUpList.SetItemText(OldFirstRow, 1, OldUpTimeStr);
+					m_OldUpList.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 					OldFirstRow++;
 					OperateDB.CloseRecordset();
 					m_OldUpEdit.SetFocus();

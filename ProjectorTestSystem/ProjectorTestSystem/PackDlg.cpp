@@ -124,6 +124,7 @@ BOOL CPackDlg::PreTranslateMessage(MSG* pMsg)
 					OperateDB.ExecuteByConnection(PackUpdataSql);
 					m_PackList.InsertItem(PackFirstRow, m_PackEditVal);
 					m_PackList.SetItemText(PackFirstRow, 1, PackTimeStr);
+					m_PackList.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 					PackFirstRow++;
 					OperateDB.CloseRecordset();
 					m_PackEdit.SetFocus();

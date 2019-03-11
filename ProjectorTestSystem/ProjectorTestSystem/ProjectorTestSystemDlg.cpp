@@ -212,6 +212,7 @@ BOOL CProjectorTestSystemDlg::OnInitDialog()
 	m_Pack.SetDlgItemText(IDC_PACK_STATIC, _T("未选择"));
 	m_Plo.SetDlgItemText(IDC_ZHIDANNUM, _T("未选择"));
 
+	/*获取窗口指针*/
 	ProjectorTestSystemDlg = this;
 
 	return FALSE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -516,6 +517,7 @@ void CProjectorTestSystemDlg::OnAdminiGetOn()
 	}
 	if (PassWord==_T("admini"))
 	{
+		m_StateBar.SetPaneText(0, _T("登录中..."));
 		GetConnectStr();
 		OperateDB.OpenConnection();
 		ConnectFlag = OperateDB.IsConnected();
@@ -565,23 +567,41 @@ void CProjectorTestSystemDlg::OnRenewpre()
 	CString CheckSqlIndex, BodyPre, SingleBodyPre, MainPre;
 	_variant_t BodyPreVal, SingleBodyPreVal, MainPreVal;
 	int Count;
-	CheckSqlIndex.Format(_T("SELECT * FROM ProjectorInformation_EncodingRules WHERE TypeName = '%s'"), PrefixType);
+	if (DanNum=="")
+	{
+		m_Plo.SetDlgItemText(IDC_PLO_BODYNUM_STATIC, _T("未选择"));
+		m_Plo.SetDlgItemText(IDC_PLO_SINGLEBODYNUM_STATIC, _T("未选择"));
+		m_Plo.SetDlgItemText(IDC_MAINBOARDNUM_STATIC, _T("未选择"));
+		m_Plo.SetDlgItemText(IDC_ZHIDANNUM, _T("未选择"));
+		m_BeforeOld.SetDlgItemText(IDC_BEFOREOLD_STATIC, _T("未选择"));
+		m_OldUp.SetDlgItemText(IDC_OLDUP_STATIC, _T("未选择"));
+		m_OldDown.SetDlgItemText(IDC_OLDDOWN_STATIC, _T("未选择"));
+		m_AfterOld.SetDlgItemText(IDC_AFTEROLD_STATIC, _T("未选择"));
+		m_BeforeBright.SetDlgItemText(IDC_BEFOREBRIGHT_STATIC, _T("未选择"));
+		m_Fix.SetDlgItemText(IDC_FIX_STATIC, _T("未选择"));
+		m_Fix.SetDlgItemText(IDC_FIX_SINGLEBODYNUM_STATIC, _T("未选择"));
+		m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, _T("未选择"));
+		m_Pack.SetDlgItemText(IDC_PACK_STATIC, _T("未选择"));
+		return;
+	}
+	CheckSqlIndex.Format(_T("SELECT * FROM ProjectorInformation_EncodingRules WHERE TypeName = '%s'"), DanNum);
 	OperateDB.OpenRecordset(CheckSqlIndex);
 	Count = OperateDB.GetRecordCount();
 	if (Count==0)
 	{
-		m_Plo.SetDlgItemText(IDC_PLO_BODYNUM_STATIC, _T(""));
-		m_Plo.SetDlgItemText(IDC_PLO_SINGLEBODYNUM_STATIC, _T(""));
-		m_Plo.SetDlgItemText(IDC_MAINBOARDNUM_STATIC, _T(""));
-		m_BeforeOld.SetDlgItemText(IDC_BEFOREOLD_STATIC, _T(""));
-		m_OldUp.SetDlgItemText(IDC_OLDUP_STATIC, _T(""));
-		m_OldDown.SetDlgItemText(IDC_OLDDOWN_STATIC, _T(""));
-		m_AfterOld.SetDlgItemText(IDC_AFTEROLD_STATIC, _T(""));
-		m_BeforeBright.SetDlgItemText(IDC_BEFOREBRIGHT_STATIC, _T(""));
-		m_Fix.SetDlgItemText(IDC_FIX_STATIC, _T(""));
-		m_Fix.SetDlgItemText(IDC_FIX_SINGLEBODYNUM_STATIC, _T(""));
-		m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, _T(""));
-		m_Pack.SetDlgItemText(IDC_PACK_STATIC, _T(""));
+		m_Plo.SetDlgItemText(IDC_PLO_BODYNUM_STATIC, _T("未选择"));
+		m_Plo.SetDlgItemText(IDC_PLO_SINGLEBODYNUM_STATIC, _T("未选择"));
+		m_Plo.SetDlgItemText(IDC_MAINBOARDNUM_STATIC, _T("未选择"));
+		m_Plo.SetDlgItemText(IDC_ZHIDANNUM, _T("未选择"));
+		m_BeforeOld.SetDlgItemText(IDC_BEFOREOLD_STATIC, _T("未选择"));
+		m_OldUp.SetDlgItemText(IDC_OLDUP_STATIC, _T("未选择"));
+		m_OldDown.SetDlgItemText(IDC_OLDDOWN_STATIC, _T("未选择"));
+		m_AfterOld.SetDlgItemText(IDC_AFTEROLD_STATIC, _T("未选择"));
+		m_BeforeBright.SetDlgItemText(IDC_BEFOREBRIGHT_STATIC, _T("未选择"));
+		m_Fix.SetDlgItemText(IDC_FIX_STATIC, _T("未选择"));
+		m_Fix.SetDlgItemText(IDC_FIX_SINGLEBODYNUM_STATIC, _T("未选择"));
+		m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, _T("未选择"));
+		m_Pack.SetDlgItemText(IDC_PACK_STATIC, _T("未选择"));
 	}
 	else
 	{

@@ -77,7 +77,7 @@ BOOL CPloDlg::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	m_PloList.SetExtendedStyle(m_PloList.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	m_PloList.InsertColumn(0, _T("机身码"), LVCFMT_CENTER, 150, 0);
-	m_PloList.InsertColumn(1, _T("光机编码"),LVCFMT_CENTER, 150, 1);
+	m_PloList.InsertColumn(1, _T("光机码"),LVCFMT_CENTER, 150, 1);
 	m_PloList.InsertColumn(2, _T("主板编码"), LVCFMT_CENTER, 150, 2);
 	m_PloList.InsertColumn(3, _T("更新时间"), LVCFMT_CENTER, 150, 3);
 	m_PloList.InsertColumn(4, _T("订单号"), LVCFMT_CENTER, 150, 4);
@@ -193,6 +193,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 							m_PloList.InsertItem(FirstRow, m_BodyNumVal);
 							m_PloList.SetItemText(FirstRow, 3, TimeStr);
 							m_PloList.SetItemText(FirstRow, 4, DanNum);
+							m_PloList.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 							FirstRow++;
 							m_BodyNumVal = _T("");
 							UpdateData(FALSE);
@@ -244,7 +245,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 						m_PloSingleBodyNumEdit.SetFocus();
 						return CDialogEx::PreTranslateMessage(pMsg);
 					}
-					SelectSqlEdit1.Format(_T("SELECT * FROM ProjectorInformation_MainTable WHERE OpticalCode = '%s'"), m_SingleBodyNumVal);
+					SelectSqlEdit1.Format(_T("SELECT * FROM ProjectorInformation_MainTable WHERE OpticalCode = '%s' or AfterMaintenanceOpticalCode = '%s'"), m_SingleBodyNumVal, m_SingleBodyNumVal);
 					OperateDB.OpenRecordset(SelectSqlEdit1);
 					RecodestCount = OperateDB.GetRecordCount();
 					if (RecodestCount != 0)
@@ -272,6 +273,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 								m_PloList.SetItemText(FirstRow, 1, m_SingleBodyNumVal);
 								m_PloList.SetItemText(FirstRow, 3, TimeStr);
 								m_PloList.SetItemText(FirstRow, 4, DanNum);
+								m_PloList.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 								FirstRow++;
 								m_SingleBodyNumVal = _T("");
 								m_BodyNumVal = _T("");
@@ -301,7 +303,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 					m_MainBoardNumStaticValLength = m_PloMainBoardStaticVal.GetLength();
 					m_MainBoardNumValStr = m_MainBoardNumVal.Left(m_MainBoardNumStaticValLength);
 					m_MainBoardNumValLength = m_MainBoardNumVal.GetLength();
-					if (m_MainBoardNumValStr != m_PloMainBoardStaticVal || m_MainBoardNumValStr == "" || m_MainBoardNumValLength>16)
+					if (m_MainBoardNumValStr != m_PloMainBoardStaticVal || m_MainBoardNumVal == "" || m_MainBoardNumValLength>16)
 					{
 						MessageBox(_T("主板编码错误"), _T("提示"));
 						m_MainBoardNumVal = _T("");
@@ -309,7 +311,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 						m_PloMainBoardNumEcit.SetFocus();
 						return CDialogEx::PreTranslateMessage(pMsg);
 					}
-					SelectSqlEdit1.Format(_T("SELECT * FROM ProjectorInformation_MainTable WHERE MainBoardCode = '%s'"), m_MainBoardNumVal);
+					SelectSqlEdit1.Format(_T("SELECT * FROM ProjectorInformation_MainTable WHERE MainBoardCode = '%s' or AfterMaintenanceMainBoardCode = '%s'"), m_MainBoardNumVal, m_MainBoardNumVal);
 					OperateDB.OpenRecordset(SelectSqlEdit1);
 					RecodestCount = OperateDB.GetRecordCount();
 					if (RecodestCount != 0)
@@ -348,6 +350,7 @@ BOOL CPloDlg::PreTranslateMessage(MSG* pMsg)
 							m_PloList.SetItemText(FirstRow, 3, TimeStr);
 							m_PloList.SetItemText(FirstRow, 4, DanNum);
 							m_PloList.SetItemText(FirstRow,2,m_MainBoardNumVal);
+							m_PloList.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 							FirstRow++;
 							m_BodyNumVal = _T("");
 							m_SingleBodyNumVal = _T("");

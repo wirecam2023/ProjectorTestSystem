@@ -75,7 +75,7 @@ BOOL CFixDlg::OnInitDialog()
 	m_FixList.SetExtendedStyle(m_FixList.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	m_FixList.InsertColumn(0, _T("机身码"), LVCFMT_CENTER, 150, 0);
 	m_FixList.InsertColumn(1, _T("维系描述"), LVCFMT_CENTER, 250, 1);
-	m_FixList.InsertColumn(2, _T("维修后光机编码"), LVCFMT_CENTER, 150, 2);
+	m_FixList.InsertColumn(2, _T("维修后光机码"), LVCFMT_CENTER, 150, 2);
 	m_FixList.InsertColumn(3, _T("维修后主板编码"), LVCFMT_CENTER, 150, 3);
 	m_FixList.InsertColumn(4, _T("更新时间"), LVCFMT_CENTER, 150, 4);
 	FixDlg = this;
@@ -177,6 +177,7 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 					m_FixList.InsertItem(FixFirstRow, m_FixSingleBodyEditVal);
 					m_FixList.SetItemText(FixFirstRow, 1, m_FixTextVal);
 					m_FixList.SetItemText(FixFirstRow, 4, FixTimeStr);
+					m_FixList.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 					FixFirstRow++;
 					m_FixTextVal = _T("");
 					m_FixSingleBodyEditVal = _T("");
@@ -255,6 +256,7 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 					m_FixList.SetItemText(FixFirstRow, 1, m_FixTextVal);
 					m_FixList.SetItemText(FixFirstRow, 4, FixTimeStr);
 					m_FixList.SetItemText(FixFirstRow, 2, m_AfterFixSingleEditVal);
+					m_FixList.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 					FixFirstRow++;
 					m_AfterFixSingleEditVal = _T("");
 					m_FixSingleBodyEditVal = _T("");
@@ -330,7 +332,8 @@ BOOL CFixDlg::PreTranslateMessage(MSG* pMsg)
 				if (m_FixSingleBodyState == TRUE)
 				{
 					m_FixList.SetItemText(FixFirstRow, 2, m_AfterFixSingleEditVal);
-				}		
+				}	
+				m_FixList.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 				FixFirstRow++;
 				m_FixSingleBodyEditVal = _T("");
 				m_FixTextVal = _T("");

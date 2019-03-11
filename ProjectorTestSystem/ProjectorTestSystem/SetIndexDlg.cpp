@@ -190,6 +190,18 @@ void CSetIndexDlg::OnBnClickedSave()
 		MessageBox(_T("前缀已存在,无需新建或修改"), _T("提示"));
 		NewIndexTypeFlag = FALSE;
 		InsertFinshFlag = TRUE;
+		m_BodyNum.SetReadOnly(FALSE);
+		m_SingleBodyNum.SetReadOnly(FALSE);
+		m_MainBoardNum.SetReadOnly(FALSE);
+		m_IndexType.SetReadOnly(FALSE);
+		m_Save.EnableWindow(TRUE);
+		m_Abortion.EnableWindow(TRUE);
+		m_Change.EnableWindow(FALSE);
+		m_Select.EnableWindow(FALSE);
+		m_Delete.EnableWindow(FALSE);
+		m_SetIndex.EnableWindow(FALSE);
+		m_New.EnableWindow(FALSE);
+		return;
 	}
 	else
 	{
@@ -203,6 +215,10 @@ void CSetIndexDlg::OnBnClickedSave()
 			InsertFinshFlag = OperateDB.ExecuteByConnection(SqlInsert);
 			NewIndexTypeFlag = FALSE;
 			MessageBox(_T("保存成功！"), _T("提示"));
+			SetDlgItemText(IDC_INDEXTYPE, "");
+			SetDlgItemText(IDC_TOOLINDEX, _T(""));
+			SetDlgItemText(IDC_SINGLETOOLINDEX, _T(""));
+			SetDlgItemText(IDC_MAININDEX, _T(""));
 		}
 		else
 		{
@@ -217,6 +233,10 @@ void CSetIndexDlg::OnBnClickedSave()
 				InsertFinshFlag = OperateDB.ExecuteByConnection(SqlInsert);
 				NewIndexTypeFlag = FALSE;
 				MessageBox(_T("保存成功！"), _T("提示"));
+				SetDlgItemText(IDC_INDEXTYPE, "");
+				SetDlgItemText(IDC_TOOLINDEX, _T(""));
+				SetDlgItemText(IDC_SINGLETOOLINDEX, _T(""));
+				SetDlgItemText(IDC_MAININDEX, _T(""));
 
 			}
 		
@@ -335,6 +355,10 @@ void CSetIndexDlg::OnTvnSelchangedIndexbuff(NMHDR *pNMHDR, LRESULT *pResult)
 	m_TypeName = m_SetIndex.GetItemText(IsSelect);
 	if (IsSelect==hRoot)
 	{
+		SetDlgItemText(IDC_INDEXTYPE,"");
+		SetDlgItemText(IDC_TOOLINDEX, _T(""));
+		SetDlgItemText(IDC_SINGLETOOLINDEX, _T(""));
+		SetDlgItemText(IDC_MAININDEX, _T(""));
 		return;
 	}
 	SqlStr.Format(_T("select Prefix_BodyCode,Prefix_OpticalCode,Prefix_MotherboardEncoding from ProjectorInformation_EncodingRules where TypeName='%s'"), m_TypeName);
@@ -355,6 +379,7 @@ void CSetIndexDlg::OnBnClickedDelete()
 {
 	// TODO:  在此添加控件通知处理程序代码
 	CString SqlDelete,TypeNameDeleteFlag;
+	CString myIndexName;
 	BOOL DeleteFinshFlag = FALSE;
 	GetDlgItemText(IDC_INDEXTYPE, TypeNameDeleteFlag);
 	if (TypeNameDeleteFlag=="")
@@ -366,14 +391,59 @@ void CSetIndexDlg::OnBnClickedDelete()
 	DeleteFinshFlag = OperateDB.ExecuteByConnection(SqlDelete);	
 	if (DeleteFinshFlag==TRUE)
 	{
+		if (m_TypeName == DanNum)
+		{
+			//ProjectorTestSystemDlg->m_Plo.SetDlgItemTextA(IDC_ZHIDANNUM, _T(""));
+			ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_PLO_BODYNUM_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_PLO_SINGLEBODYNUM_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_MAINBOARDNUM_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_ZHIDANNUM, _T("未选择"));
+			ProjectorTestSystemDlg->m_BeforeOld.SetDlgItemText(IDC_BEFOREOLD_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_OldUp.SetDlgItemText(IDC_OLDUP_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_OldDown.SetDlgItemText(IDC_OLDDOWN_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_AfterOld.SetDlgItemText(IDC_AFTEROLD_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_BeforeBright.SetDlgItemText(IDC_BEFOREBRIGHT_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_Fix.SetDlgItemText(IDC_FIX_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_Fix.SetDlgItemText(IDC_FIX_SINGLEBODYNUM_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, _T("未选择"));
+			ProjectorTestSystemDlg->m_Pack.SetDlgItemText(IDC_PACK_STATIC, _T("未选择"));
+			DanNum = _T("");
+		}
 		m_SetIndex.DeleteItem(IsSelect);
 		SetDlgItemText(IDC_INDEXTYPE, _T(""));
 		SetDlgItemText(IDC_TOOLINDEX, _T(""));
 		SetDlgItemText(IDC_SINGLETOOLINDEX, _T(""));
 		SetDlgItemText(IDC_MAININDEX, _T(""));
-		ProjectorTestSystemDlg->m_Plo.SetDlgItemTextA(IDC_ZHIDANNUM,_T(""));
-		DanNum = _T("");
+			
 		MessageBox(_T("删除成功"), _T("提示"));
+		OperateDB.OpenRecordset(_T("SELECT * FROM ProjectorInformation_EncodingRules"));
+		try
+		{
+			if (!OperateDB.m_pRecordset->BOF)
+				OperateDB.m_pRecordset->MoveFirst();
+			else
+			{
+				AfxMessageBox(_T("表内数据为空"));
+				OperateDB.CloseRecordset();
+				return ;
+			}
+			// 读入库中各字段并加入列表框中
+			while (!OperateDB.m_pRecordset->adoEOF)
+			{
+				myIndexName = OperateDB.m_pRecordset->GetCollect(_T("TypeName"));
+				if (myIndexName != _T(""))
+				{
+					m_SetIndex.InsertItem(myIndexName, 1, 1, hRoot, TVI_LAST);
+				}
+				OperateDB.m_pRecordset->MoveNext();
+			}
+			OperateDB.CloseRecordset();
+		}
+		catch (_com_error &e)
+		{
+			OperateDB.m_szErrorMsg = e.ErrorMessage();
+			return ;
+		}
 	}
 	else
 	{
@@ -385,7 +455,7 @@ void CSetIndexDlg::OnBnClickedDelete()
 void CSetIndexDlg::OnBnClickedOk()
 {
 	// TODO:  在此添加控件通知处理程序代码
-	GetDlgItemText(IDC_INDEXTYPE, PrefixType);
+	/*GetDlgItemText(IDC_INDEXTYPE, PrefixType);
 	GetDlgItemText(IDC_TOOLINDEX, BodyNumPrefix);
 	GetDlgItemText(IDC_SINGLETOOLINDEX, SingleBodyNumPrefix);
 	GetDlgItemText(IDC_MAININDEX, MainBoardNumPrefix);
@@ -421,14 +491,12 @@ void CSetIndexDlg::OnBnClickedOk()
 		ProjectorTestSystemDlg->m_Fix.SetDlgItemText(IDC_FIX_SINGLEBODYNUM_STATIC, _T("未选择"));
 		ProjectorTestSystemDlg->m_Fix.SetDlgItemTextA(IDC_FIX_MAINBOARDNUM_STATIC, _T("未选择"));
 		ProjectorTestSystemDlg->m_Pack.SetDlgItemText(IDC_PACK_STATIC, _T("未选择"));
-		ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_ZHIDANNUM, _T("未选择"));
-		NewIndexTypeFlag = FALSE;
-		CDialogEx::OnOK();
-	}
+		ProjectorTestSystemDlg->m_Plo.SetDlgItemText(IDC_ZHIDANNUM, _T("未选择"));*/
+	//	NewIndexTypeFlag = FALSE;
+	///*	CDialogEx::OnOK();*/
+	//}
 }
 	
-
-
 void CSetIndexDlg::OnCancel()
 {
 	// TODO:  在此添加专用代码和/或调用基类

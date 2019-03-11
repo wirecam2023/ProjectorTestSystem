@@ -135,6 +135,7 @@ BOOL CAfterOldDlg::PreTranslateMessage(MSG* pMsg)
 					OperateDB.ExecuteByConnection(AfterOldUpdateSql);
 					m_AfetrOldList.InsertItem(AfterOldFirstRow, m_AfterOldBodyEdit);
 					m_AfetrOldList.SetItemText(AfterOldFirstRow, 1, FirstAfterTimeStr);
+					m_AfetrOldList.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 					AfterOldFirstRow++;
 					OperateDB.CloseRecordset();
 					m_AfterOldEditContrl.SetFocus();
@@ -152,6 +153,7 @@ BOOL CAfterOldDlg::PreTranslateMessage(MSG* pMsg)
 					m_AfetrOldList.InsertItem(AfterOldFirstRow, m_AfterOldBodyEdit);
 					m_AfetrOldList.SetItemText(AfterOldFirstRow, 1, sTimeOneAfterStr);
 					m_AfetrOldList.SetItemText(AfterOldFirstRow, 2, SecondAfterTimeStr);
+					m_AfetrOldList.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
 					AfterOldFirstRow++;
 					OperateDB.CloseRecordset();
 					m_AfterOldEditContrl.SetFocus();
