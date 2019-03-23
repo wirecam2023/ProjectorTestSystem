@@ -115,7 +115,7 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 	CString str, stry, strm, strd, strh, strM, strs,BrightSelectSql,ListCtrlFalg,CtrlFlag;
 	SYSTEMTIME st;
 	CString UpdateBrightToSql,ListFirstColStr,MyTimeStr,ListFirstStr,SubEditVal;
-	_variant_t AfterOldTestTime;
+	_variant_t AfterOldTestTime,BeforeBrightVal;
 	int DataCount=0,ListRowNum;
 	int StaticValLength;
 	StaticValLength = m_BrightStaticVal.GetLength();
@@ -309,6 +309,22 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 					{
 						OperateDB.m_pRecordset->MoveFirst();
 						AfterOldTestTime = OperateDB.m_pRecordset->GetCollect(_T("PostAgingTestTime"));
+						BeforeBrightVal = OperateDB.m_pRecordset->GetCollect(_T("LuminanceTestTime"));
+						if (BeforeBrightVal.vt!=VT_NULL)
+						{
+							SYSTEMTIME myBefroeBrightTime;
+							VariantTimeToSystemTime((COleDateTime)BeforeBrightVal, &myBefroeBrightTime);
+							CString decrition;
+							decrition.Format(_T("的产品已经过亮度测试, 测试时间为： %d-%d-%d %d:%d:%d"),myBefroeBrightTime.wYear, myBefroeBrightTime.wMonth, myBefroeBrightTime.wDay\
+								, myBefroeBrightTime.wHour, myBefroeBrightTime.wMinute, myBefroeBrightTime.wSecond);
+							decrition = _T("机身码为：") + str + decrition;
+							//MessageBox(decrition, _T("提示"));
+							m_BrightRich.SetSel(-1, -1);
+							m_BrightRich.ReplaceSel(decrition + _T("\r\n"));
+							m_BrightRich.SendMessage(WM_VSCROLL, SB_BOTTOM, 0);
+							WritetoTxt(decrition + _T("\r\n"));
+							break;
+						}
 						if (AfterOldTestTime.vt == VT_NULL)
 						{
 							m_BrightRich.SetSel(-1, -1);
@@ -318,6 +334,7 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 							/*m_BeforeBright.InsertItem(i - 2, strRowName);*/
 							break;
 						}
+
 					}
 				}
 				m_BeforeBright.InsertItem(ListRowNum, str);
@@ -357,7 +374,7 @@ void CBeforeBrightDlg::OnBnClickedExceltosql()
 			   OperateDB.m_szErrorMsg = e.ErrorMessage();
 			   return;
 		   }
-		   if (DataCount == 0 || AfterOldTestTime.vt == VT_NULL)
+		   if (DataCount == 0 || AfterOldTestTime.vt == VT_NULL|| BeforeBrightVal.vt!=VT_NULL)
 		   {
 			   ListRowNum = ListRowNum;
                break;

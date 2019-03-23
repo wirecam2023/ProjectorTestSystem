@@ -118,6 +118,20 @@ BOOL CBefroeOldDlg::PreTranslateMessage(MSG* pMsg)
 					mPreAgingTestTime = OperateDB.m_pRecordset->GetCollect(_T("PreAgingTestTime"));
 					mPreAgingTestTime2 = OperateDB.m_pRecordset->GetCollect(_T("PreAgingTestTime2"));
 				}
+				if (mPreAgingTestTime2.vt!=VT_NULL)
+				{
+					SYSTEMTIME myBefroeTime;
+					VariantTimeToSystemTime((COleDateTime)mPreAgingTestTime2, &myBefroeTime);
+					CString decrition;
+					decrition.Format(_T("该产品已经过两次老化前测试, 第二次测试时间为： %d-%d-%d %d:%d:%d"), myBefroeTime.wYear, myBefroeTime.wMonth, myBefroeTime.wDay\
+						, myBefroeTime.wHour, myBefroeTime.wMinute, myBefroeTime.wSecond);
+					MessageBox(decrition, _T("提示"));
+					m_BeforeOldEditContrl.SetFocus();
+					m_BeforeOldBodyEdit = "";
+					UpdateData(FALSE);
+					OperateDB.CloseRecordset();
+					return CDialogEx::PreTranslateMessage(pMsg);
+				}
 				if (mPreAgingTestTime.vt == VT_NULL)
 				{
 					FirstBeforeTimeStr = GetTime();

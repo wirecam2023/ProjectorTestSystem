@@ -66,7 +66,7 @@ BOOL COldUpDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO:  在此添加专用代码和/或调用基类
 	CString m_OldUpEditStr,OldUpSelectSql,OldUpTimeStr,OldUpUpdataSql;
-	_variant_t FirstOldTime;
+	_variant_t FirstOldTime,OldUpTimeVal;
 	int m_OldUpStaticLength;
 	LONG OldUpRecordestCount;
 	UpdateData(TRUE);
@@ -110,6 +110,22 @@ BOOL COldUpDlg::PreTranslateMessage(MSG* pMsg)
 				if (!OperateDB.m_pRecordset->BOF)
 					OperateDB.m_pRecordset->MoveFirst();
 				FirstOldTime = OperateDB.m_pRecordset->GetCollect(_T("PreAgingTestTime"));
+				OldUpTimeVal = OperateDB.m_pRecordset->GetCollect(_T("AgeingBeginTime"));
+				if (OldUpTimeVal.vt!=VT_NULL)
+				{
+					SYSTEMTIME myOldUpTime;
+					VariantTimeToSystemTime((COleDateTime)OldUpTimeVal, &myOldUpTime);
+					CString decrition;
+					decrition.Format(_T("该产品已经过老化上架, 上架时间为： %d-%d-%d %d:%d:%d"), myOldUpTime.wYear, myOldUpTime.wMonth, myOldUpTime.wDay\
+						, myOldUpTime.wHour, myOldUpTime.wMinute, myOldUpTime.wSecond);
+					MessageBox(decrition, _T("提示"));
+					OperateDB.CloseRecordset();
+					m_OldUpEdit.SetFocus();
+					m_OldUpEditVal = "";
+					UpdateData(FALSE);
+					OperateDB.CloseRecordset();
+					return CDialogEx::PreTranslateMessage(pMsg);
+				}
 				if (FirstOldTime.vt == VT_NULL)
 				{
 					MessageBox(_T("该产品未做老化前测试"), _T("提示"));

@@ -128,6 +128,20 @@ BOOL CAfterOldDlg::PreTranslateMessage(MSG* pMsg)
 					mPostAgingTestTime = OperateDB.m_pRecordset->GetCollect(_T("PostAgingTestTime"));
 					mPostAgingTestTime2 = OperateDB.m_pRecordset->GetCollect(_T("PostAgingTestTime2"));
 				}
+				if (mPostAgingTestTime2.vt != VT_NULL)
+				{
+					SYSTEMTIME myAfterTime;
+					VariantTimeToSystemTime((COleDateTime)mPostAgingTestTime2, &myAfterTime);
+					CString decrition;
+					decrition.Format(_T("该产品已经过两次老化后测试, 第二次测试时间为： %d-%d-%d %d:%d:%d"), myAfterTime.wYear,myAfterTime.wMonth,myAfterTime.wDay\
+					,myAfterTime.wHour,myAfterTime.wMinute,myAfterTime.wSecond);
+					MessageBox(decrition, _T("提示"));
+					m_AfterOldEditContrl.SetFocus();
+					m_AfterOldBodyEdit = "";
+					UpdateData(FALSE);
+					OperateDB.CloseRecordset();
+					return CDialogEx::PreTranslateMessage(pMsg);
+				}
 				if (mPostAgingTestTime.vt == VT_NULL)
 				{
 					FirstAfterTimeStr = GetTime();

@@ -163,7 +163,7 @@ BOOL CProjectorTestSystemDlg::OnInitDialog()
 	CRect tabRect;   // 标签控件客户区的位置和大小   
 	m_Tab.InsertItem(0, _T("查询主界面"),0);  
 	m_Tab.InsertItem(1, _T("打光机、主板"),1);
-	m_Tab.InsertItem(2, _T("老化前测试位"),2);  
+	m_Tab.InsertItem(2, _T("老化前测试"),2);  
 	m_Tab.InsertItem(3, _T("老化（上架时间）"),3);
 	m_Tab.InsertItem(4, _T("老化（下架时间）"),4);
 	m_Tab.InsertItem(5, _T("老化后测试"),5);

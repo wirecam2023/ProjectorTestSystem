@@ -1,4 +1,4 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: 中间目录(Release\)包含从另一个项目(PJTestSystem_1.0.0_201901280800.vcxproj, PJTestSystem_1.0.0_201902131152.vcxproj, PJTestSystem_1.0.0_201902151649.vcxproj, PJTestSystem_1.0.1_201902151649.vcxproj, PJTestSystem_1.0.2_201902190952.vcxproj, PJTestSystem_1.0.2_201902191109.vcxproj, PJTestSystem_1.0.3_201902200831.vcxproj, PJTestSystem_1.0.4_201902200852.vcxproj, PJTestSystem_1.0.4_201902202102.vcxproj, PJTestSystem_1.0.4_201902210852.vcxproj, ProjectorTestSystem.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: 中间目录(Release\)包含从另一个项目(PJTestSystem_1.0.0_201901280800.vcxproj, PJTestSystem_1.0.0_201902131152.vcxproj, PJTestSystem_1.0.0_201902151649.vcxproj, PJTestSystem_1.0.1_201902151649.vcxproj, PJTestSystem_1.0.2_201902190952.vcxproj, PJTestSystem_1.0.2_201902191109.vcxproj, PJTestSystem_1.0.3_201902200831.vcxproj, PJTestSystem_1.0.4_201902200852.vcxproj, PJTestSystem_1.0.4_201902202102.vcxproj, PJTestSystem_1.0.4_201902210852.vcxproj, PJTestSystem_1.0.6_201903111616.vcxproj, ProjectorTestSystem.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
   stdafx.cpp
   AdminiPassDlg.cpp
   AdoDB.cpp
@@ -21,4 +21,4 @@ f:\版本库\projectortestsystem\projectortestsystem\projectortestsystem\maindlg
   正在生成代码
   All 960 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   已完成代码的生成
-  ProjectorTestSystem.vcxproj -> F:\版本库\ProjectorTestSystem\ProjectorTestSystem\Release\PJTestSystem_1.0.6_201903111616.exe
+  ProjectorTestSystem.vcxproj -> F:\版本库\ProjectorTestSystem\ProjectorTestSystem\Release\PJTestSystem_1.0.7_201903231606.exe

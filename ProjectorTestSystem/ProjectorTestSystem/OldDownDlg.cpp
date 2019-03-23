@@ -70,7 +70,7 @@ BOOL COldDownDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO:  在此添加专用代码和/或调用基类
 	CString m_OldDownEditStr, OldDownSelectSql, OldDownTimeStr, OldDownUpdataSql;
-	_variant_t OldUpTime;
+	_variant_t OldUpTime,OldDownTimeVal;
 	int m_OldDownStaticLength;
 	LONG OldDownRecordestCount;
 	UpdateData(TRUE);
@@ -112,6 +112,21 @@ BOOL COldDownDlg::PreTranslateMessage(MSG* pMsg)
 				if (!OperateDB.m_pRecordset->BOF)
 					OperateDB.m_pRecordset->MoveFirst();
 				OldUpTime = OperateDB.m_pRecordset->GetCollect(_T("AgeingBeginTime"));
+				OldDownTimeVal = OperateDB.m_pRecordset->GetCollect(_T("AgeingEndTime"));
+				if (OldDownTimeVal.vt!=VT_NULL)
+				{
+					SYSTEMTIME myOldDownTime;
+					VariantTimeToSystemTime((COleDateTime)OldDownTimeVal, &myOldDownTime);
+					CString decrition;
+					decrition.Format(_T("该产品已经过老化下架, 下架时间为： %d-%d-%d %d:%d:%d"), myOldDownTime.wYear, myOldDownTime.wMonth, myOldDownTime.wDay\
+						, myOldDownTime.wHour, myOldDownTime.wMinute, myOldDownTime.wSecond);
+					MessageBox(decrition, _T("提示"));
+					OperateDB.CloseRecordset();
+					m_OldDownEdit.SetFocus();
+					m_OldDownEditVal = "";
+					UpdateData(FALSE);
+					return CDialogEx::PreTranslateMessage(pMsg);
+				}
 				if (OldUpTime.vt == VT_NULL)
 				{
 					MessageBox(_T("该产品没有上架老化"), _T("提示"));

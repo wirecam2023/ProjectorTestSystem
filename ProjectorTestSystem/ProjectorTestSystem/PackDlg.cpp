@@ -68,7 +68,7 @@ BOOL CPackDlg::PreTranslateMessage(MSG* pMsg)
 	CString m_PackEditStr, PackSelectSql, PackTimeStr, PackUpdataSql;
 	int m_PackStaticLength;
 	LONG PackRecordestCount;
-	_variant_t BrightTime;
+	_variant_t BrightTime,PackTimeVal;
 	UpdateData(TRUE);
 	if (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_RETURN)
 	{
@@ -108,6 +108,21 @@ BOOL CPackDlg::PreTranslateMessage(MSG* pMsg)
 				if (!OperateDB.m_pRecordset->BOF)
 					OperateDB.m_pRecordset->MoveFirst();
 				BrightTime = OperateDB.m_pRecordset->GetCollect(_T("LuminanceTestTime"));
+				PackTimeVal = OperateDB.m_pRecordset->GetCollect(_T("PackingTime"));
+				if (PackTimeVal.vt!=VT_NULL)
+				{
+					SYSTEMTIME myPackTime;
+					VariantTimeToSystemTime((COleDateTime)PackTimeVal, &myPackTime);
+					CString decrition;
+					decrition.Format(_T("该产品已经过扫码包装,扫码时间为 ： %d-%d-%d %d:%d:%d"), myPackTime.wYear, myPackTime.wMonth, myPackTime.wDay\
+						, myPackTime.wHour, myPackTime.wMinute, myPackTime.wSecond);
+					MessageBox(decrition, _T("提示"));
+					OperateDB.CloseRecordset();
+					m_PackEdit.SetFocus();
+					m_PackEditVal = "";
+					UpdateData(FALSE);
+					return CDialogEx::PreTranslateMessage(pMsg);
+				}
 				if (BrightTime.vt == VT_NULL)
 				{
 					MessageBox(_T("该产品没有进行亮度测试"), _T("提示"));
